@@ -1,0 +1,6 @@
+@Renova.Core_HostAddress = http://localhost:5234
+
+GET {{Renova.Core_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
