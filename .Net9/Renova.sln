@@ -5,7 +5,9 @@ VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.WebApi", "src\Renova.WebApi\Renova.WebApi.csproj", "{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "framework\Renova.Core\Renova.Core\Renova.Core.csproj", "{2DFFB0EC-7107-46B9-A076-75826A6B0A04}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "framework\Renova.Core\Renova.Core.csproj", "{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,13 +19,16 @@ Global
 		{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70662F9B-1285-45EA-8FBA-D779A0696EF9}
