@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Serilog", "framework
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Autofac", "framework\Renova.Autofac\Renova.Autofac.csproj", "{0066790E-32B6-4307-8D3D-E35F01F1251E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.RabbitMQ", "framework\Renova.RabbitMQ\Renova.RabbitMQ.csproj", "{FFB105E0-2561-4BCE-9534-22D26D7B60B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{0066790E-32B6-4307-8D3D-E35F01F1251E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0066790E-32B6-4307-8D3D-E35F01F1251E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0066790E-32B6-4307-8D3D-E35F01F1251E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB105E0-2561-4BCE-9534-22D26D7B60B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB105E0-2561-4BCE-9534-22D26D7B60B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB105E0-2561-4BCE-9534-22D26D7B60B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB105E0-2561-4BCE-9534-22D26D7B60B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{0066790E-32B6-4307-8D3D-E35F01F1251E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{FFB105E0-2561-4BCE-9534-22D26D7B60B4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70662F9B-1285-45EA-8FBA-D779A0696EF9}
