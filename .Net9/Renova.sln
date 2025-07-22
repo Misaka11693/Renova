@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "framework\Renova.Core\Renova.Core.csproj", "{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Serilog", "framework\Renova.Serilog\Renova.Serilog.csproj", "{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{AED60BBB-7F3A-4F22-AB1A-65FA264D3DF5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70662F9B-1285-45EA-8FBA-D779A0696EF9}

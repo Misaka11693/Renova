@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\framework\Renova.Core\Renova.Core.csproj" />
+    <ProjectReference Include="..\..\framework\Renova.Serilog\Renova.Serilog.csproj" />
   </ItemGroup>
 
 </Project>
