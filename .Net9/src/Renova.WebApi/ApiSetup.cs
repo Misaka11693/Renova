@@ -1,4 +1,5 @@
 ﻿using Renova.Core.Apps;
+using Renova.EventBus;
 using Simple.DynamicWebApi;
 
 namespace Renova;
@@ -22,6 +23,9 @@ public static class ApiSetup
 
         //配置动态 API 服务
         builder.Services.AddDynamicWebApi();
+
+        //配置事件总线
+        builder.Services.AddEventBusSetup();
 
         return builder;
     }
