@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/.Net9/src/Renova.WebApi/appsettings.Development.json
+/.Net9/src/Renova.WebApi/appsettings.json
