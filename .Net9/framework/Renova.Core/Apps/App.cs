@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Security.Claims;
 
-namespace Renova.Core.Apps;
+namespace Renova.Core;
 
 /// <summary>
 /// 全局应用类
