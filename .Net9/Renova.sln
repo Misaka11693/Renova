@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Api", "src\Renova.WebApi\Renova.Api.csproj", "{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "framework\Renova.Core\Renova.Core\Renova.Core.csproj", "{2DFFB0EC-7107-46B9-A076-75826A6B0A04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DFFB0EC-7107-46B9-A076-75826A6B0A04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
