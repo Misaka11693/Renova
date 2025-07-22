@@ -22,7 +22,6 @@ public static class AutofacExtensions
         hostBuilder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
         hostBuilder.ConfigureContainer<ContainerBuilder>(container =>
         {
-
             //container.RegisterModule<AutofacModule>();
 
             var moduleTypes = App.EffectiveTypes.Where(t => typeof(Module).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface && t.IsClass);

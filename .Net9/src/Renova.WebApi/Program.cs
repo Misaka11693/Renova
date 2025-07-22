@@ -1,34 +1,42 @@
+using Renova;
+using Renova.Autofac;
+using Renova.Serilog;
+using Serilog;
 
-namespace Renova
+
+try
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    Log.Logger = SerilogConfigurator.Init();
 
-            // Add services to the container.
+    Log.Information("""
 
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+     ____                                  _       _           _       
+    |  _ \ ___ _ __   _____   ____ _      / \   __| |_ __ ___ |_|_ __  
+    | |_) / _ \ '_ \ / _ \ \ / / _` |    / _ \ / _` | '_ ` _ \| | '_  \ 
+    |  _ <  __/ | | | (_) \ V / (_| |_  / ___ \ (_| | | | | | | | | | |
+    |_| \_\___|_| |_|\___/ \_/ \__,__/ /_/   \_\__,_|_| |_| |_|_|_| |_|   {Version} 
+                                                                      
+    {description}
 
-            var app = builder.Build();
+    """, "Version: 1.0", "生命如同一场旅程，每一步都值得珍惜；无论风雨还是晴空，未来总会因你的努力而更加美好");
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+    Log.Information($" Renova.Admin ，Run! ");
+    var builder = WebApplication.CreateBuilder(args);
+    Log.Information($"当前主机启动环境-【{builder.Environment.EnvironmentName}】");
+    Log.Information($"当前主机启动地址-【{builder.Configuration["SelfUrl"]}】");
+    builder.WebHost.UseUrls(builder.Configuration["SelfUrl"]!);
+    builder.Host.UseSerilog();
+    builder.Host.UseAutofac();
+    builder.AddServices();
+    var app = builder.Build();
+    app.UseMiddlewares();
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Renova.Admin 启动失败");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
