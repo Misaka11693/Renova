@@ -1,4 +1,6 @@
-﻿namespace Renova;
+﻿using Renova.Core.Apps;
+
+namespace Renova;
 
 public static class ApiSetup
 {
@@ -8,6 +10,8 @@ public static class ApiSetup
     /// <param name="builder"></param>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
+        builder.ConfigureApplication();//配置应用,优先级最高
+
         return builder;
     }
 
@@ -17,6 +21,8 @@ public static class ApiSetup
     /// <param name="app"></param>
     public static WebApplication UseMiddlewares(this WebApplication app)
     {
+        app.UseApplication();
+
         return app;
     }
 }
