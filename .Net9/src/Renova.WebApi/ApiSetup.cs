@@ -28,7 +28,7 @@ public static class ApiSetup
         //配置动态 API 服务
         builder.Services.AddDynamicWebApi();
 
-        //配置Swagger（如果页面不能正常显示接口信息，删除浏览器缓存即可）
+        //配置Swagger（如果页面不能正常显示接口信息，通过清除浏览器的缓存来解决）
         builder.Services.AddSwaggerSetup();
 
         //配置事件总线
