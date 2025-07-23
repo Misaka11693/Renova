@@ -7,7 +7,7 @@ namespace Renova.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    [ApiExplorerSettings(GroupName = "认证授权")]
+    [ApiExplorerSettings(GroupName = "天气预报")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
