@@ -196,9 +196,9 @@ public static class App
     /// <typeparam name="TService"></typeparam>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static TService? GetRequiredService<TService>(IServiceProvider? serviceProvider = null) where TService : class
+    public static TService GetRequiredService<TService>(IServiceProvider? serviceProvider = null) where TService : class
     {
-        return GetRequiredService(typeof(TService), serviceProvider) as TService;
+        return (GetRequiredService(typeof(TService), serviceProvider) as TService)!;
     }
 
     /// <summary>
@@ -380,7 +380,7 @@ public static class App
     public static TOptions GetOptions<TOptions>(IServiceProvider? serviceProvider = null) where TOptions : class
     {
         var provider = serviceProvider ?? App.RootServices;
-        return App.GetRequiredService<IOptions<TOptions>>(provider)!.Value;
+        return App.GetRequiredService<IOptions<TOptions>>(provider).Value;
     }
 
     /// <summary>
@@ -393,7 +393,7 @@ public static class App
     public static TOptions GetOptionsMonitor<TOptions>(IServiceProvider? serviceProvider = null) where TOptions : class
     {
         var provider = serviceProvider ?? App.RootServices;
-        return App.GetRequiredService<IOptionsMonitor<TOptions>>(provider)!.CurrentValue;
+        return App.GetRequiredService<IOptionsMonitor<TOptions>>(provider).CurrentValue;
     }
 
     /// <summary>
@@ -407,7 +407,7 @@ public static class App
     public static TOptions GetOptionsSnapshot<TOptions>(IServiceProvider serviceProvider) where TOptions : class
     {
         if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-        return App.GetRequiredService<IOptionsSnapshot<TOptions>>(serviceProvider)!.Value;
+        return App.GetRequiredService<IOptionsSnapshot<TOptions>>(serviceProvider).Value;
     }
 
     #endregion

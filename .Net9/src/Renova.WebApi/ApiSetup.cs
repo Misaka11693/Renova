@@ -1,9 +1,13 @@
 ﻿using Renova.Core.Apps;
 using Renova.EventBus;
+using Renova.Swagger;
 using Simple.DynamicWebApi;
 
 namespace Renova;
 
+/// <summary>
+/// API 配置扩展
+/// </summary>
 public static class ApiSetup
 {
     /// <summary>
@@ -24,6 +28,9 @@ public static class ApiSetup
         //配置动态 API 服务
         builder.Services.AddDynamicWebApi();
 
+        //配置Swagger（如果页面不能正常显示接口信息，删除浏览器缓存即可）
+        builder.Services.AddSwaggerSetup();
+
         //配置事件总线
         builder.Services.AddEventBusSetup();
 
@@ -40,6 +47,8 @@ public static class ApiSetup
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+
+            app.AddSwagger();
         }
 
         app.UseApplication();
