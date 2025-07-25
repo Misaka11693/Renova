@@ -1,4 +1,5 @@
-﻿using Renova.Core.Apps;
+﻿using Renova.Core;
+using Renova.Core.Apps;
 using Renova.EventBus;
 using Renova.Swagger;
 using Simple.DynamicWebApi;
@@ -16,6 +17,13 @@ public static class ApiSetup
     /// <param name="builder"></param>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
+        //配置过滤器
+        builder.Services.AddControllers(option =>
+        {
+            //Api统一响应格式 
+            option.Filters.Add(typeof(ApiResponseFilter));
+        });
+
         //配置应用,优先级最高
         builder.ConfigureApplication();
 
