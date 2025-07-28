@@ -33,6 +33,10 @@ public static class ApiSetup
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        // 注册全局异常处理器
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
         //配置动态 API 服务
         builder.Services.AddDynamicWebApi();
 
@@ -57,7 +61,11 @@ public static class ApiSetup
             app.MapOpenApi();
 
             app.AddSwagger();
+
+            //app.UseDeveloperExceptionPage();
         }
+
+        app.UseExceptionHandler();
 
         app.UseApplication();
 
