@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Renova.Core;
 
 /// <summary>
-/// API 业务状态码枚举
+/// Api 业务状态码枚举
+/// 只有0表示成功，其余均为失败
 /// </summary>
 public enum ApiCode
 {
-    Success = 0,              // ✅ 成功
-    Failed = 1,               // ❌ 通用失败
+    Success = 0,              // 通用成功
+    Failed = 1,               // 通用失败
 
     Unauthorized = 401,       // 未认证或Token过期
     Forbidden = 403,          // 无权限访问

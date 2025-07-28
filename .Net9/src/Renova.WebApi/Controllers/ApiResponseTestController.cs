@@ -5,97 +5,151 @@ using System.Text;
 namespace Renova.WebApi.Controllers
 {
     /// <summary>
-    /// API响应测试控制器。
+    /// API响应测试控制器
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
-    [ApiExplorerSettings(GroupName = "API响应测试")]
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(GroupName = "API统一响应包装测试")]
     public class ApiResponseTestController : ControllerBase
     {
         /// <summary>
-        /// 正常返回对象（应被包装）
+        /// 正常对象结果（自动包装为ApiResponse）
         /// </summary>
-        [HttpGet("object-result")]
-        public IActionResult GetObjectResult()
+        [HttpGet("standard-object")]
+        public IActionResult GetStandardObject()
         {
-            return Ok(new { Name = "John", Age = 30 });
+            return Ok(new { Id = 1, Name = "Test Object" });
         }
 
         /// <summary>
-        /// 返回JSON结果（应被包装）
+        /// 自定义状态码结果（自动包装并保留状态码）
         /// </summary>
-        [HttpGet("json-result")]
-        public IActionResult GetJsonResult()
+        [HttpGet("custom-status")]
+        public IActionResult GetWithCustomStatus()
         {
-            return new JsonResult(new { Id = 1, Value = "Test" }) { StatusCode = 200 };
+            return StatusCode(StatusCodes.Status202Accepted, new { Message = "Processing" });
         }
 
         /// <summary>
-        /// 返回空结果（应被包装）
+        /// 空结果（包装为无数据的成功响应）
         /// </summary>
-        [HttpGet("empty-result")]
-        public IActionResult GetEmptyResult()
+        [HttpGet("empty-response")]
+        public IActionResult GetEmptyResponse()
         {
             return new EmptyResult();
         }
 
         /// <summary>
-        /// 返回文件结果（应跳过包装）
+        /// 错误结果（自动包装为错误格式）
         /// </summary>
-        [HttpGet("file-result")]
-        public IActionResult GetFileResult()
+        [HttpGet("error-response")]
+        public IActionResult GetErrorResponse()
         {
-            var bytes = Encoding.UTF8.GetBytes("Test file content");
-            return File(bytes, "text/plain", "test.txt");
+            return NotFound(new { ErrorDetails = "Resource not found" });
         }
 
         /// <summary>
-        /// 直接返回ApiResponse（应跳过包装）
+        /// 文件下载（跳过包装）
+        /// </summary>
+        [HttpGet("download-file")]
+        public IActionResult DownloadFile()
+        {
+            var fileContent = Encoding.UTF8.GetBytes("Test file content");
+            return File(fileContent, "text/plain", "test.txt");
+        }
+
+        /// <summary>
+        /// 预包装的ApiResponse（跳过二次包装）
         /// </summary>
         [HttpGet("pre-wrapped")]
-        public IActionResult GetPreWrapped()
+        public IActionResult GetPreWrappedResponse()
         {
-            var response = ApiResponse<object>.Success(new { Data = "Pre-wrapped" });
+            var response = ApiResponse.Success(new { Data = "Already wrapped" });
             return Ok(response);
         }
 
         /// <summary>
-        /// 标记SkipWrap特性的方法（应跳过包装）
+        /// 跳过包装的端点（直接返回原始格式）
         /// </summary>
         [HttpGet("skip-wrap")]
-        [SkipWrap] // 需要先定义SkipWrap特性
-        public IActionResult GetWithSkipWrap()
+        [SkipWrap]
+        public IActionResult GetUnwrappedResponse()
         {
-            return Ok(new { Message = "Skipped wrapping" });
+            return Ok(new { RawData = "This won't be wrapped" });
         }
 
         /// <summary>
-        /// 模拟业务失败响应
+        /// 业务验证失败示例（标准错误格式）
         /// </summary>
-        [HttpGet("business-fail")]
-        public IActionResult BusinessFailure()
+        [HttpGet("validation-fail")]
+        public IActionResult SimulateValidationFail()
         {
-            // 实际项目中应返回适当的状态码
-            return BadRequest(ApiResponse<object>.Fail("业务操作失败", ApiCode.Conflict));
+            return BadRequest(new { Field = "Name", Error = "Required" });
         }
 
         /// <summary>
-        /// 返回404结果（应被包装）
+        /// 服务器错误（自动捕获500状态码）
         /// </summary>
-        [HttpGet("not-found")]
-        public IActionResult GetNotFound()
+        [HttpGet("server-error")]
+        public IActionResult SimulateServerError()
         {
-            return NotFound(new { Error = "Item not found" });
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal error details");
+        }
+
+        /// <summary>
+        /// 重定向测试（跳过包装）
+        /// </summary>
+        [HttpGet("redirect")]
+        public IActionResult RedirectTest()
+        {
+            return Redirect("https://example.com");
+        }
+
+        /// <summary>
+        /// 内容结果测试（自动包装）
+        /// </summary>
+        [HttpGet("content-result")]
+        public ContentResult GetContentResult()
+        {
+            return Content("<html>Test</html>", "text/html");
+        }
+
+        /// <summary>
+        /// 混合错误码业务响应
+        /// </summary>
+        [HttpGet("business-error")]
+        public IActionResult BusinessError()
+        {
+            // 业务逻辑错误使用标准错误码
+            return StatusCode(StatusCodes.Status409Conflict,
+                new { TransactionId = 123, Reason = "Duplicate request" });
+        }
+
+        /// <summary>
+        /// 无内容成功（204状态码特殊处理）
+        /// </summary>
+        [HttpGet("no-content")]
+        public IActionResult NoContentResult()
+        {
+            return NoContent(); // 204状态码
+        }
+
+        /// <summary>
+        /// 返回纯字符串内容（测试过滤器对字符串的包装）
+        /// </summary>
+        [HttpGet("string-result")]
+        public IActionResult GetStringResult()
+        {
+            return Ok("This is a raw string response");
+        }
+
+        /// <summary>
+        /// 直接返回字符串（非IActionResult，测试ContentResult自动包装）
+        /// </summary>
+        [HttpGet("direct-string")]
+        public string GetDirectString()
+        {
+            return "Direct string without IActionResult";
         }
     }
 }
-
-
-// 1.正常对象结果 (GET /api/test/object-result)
-// 2.JSON结果 (GET /api/test/json-result)
-// 3.空结果 (GET /api/test/empty-result)
-// 4.文件下载结果 (GET /api/test/file-result)
-// 5.预包装的API响应 (GET /api/test/pre-wrapped)
-// 6.跳过包装的结果 (GET /api/test/skip-wrap)
-// 7.业务失败示例 (GET /api/test/business-fail)
-// 8.返回404错误 (GET /api/test/not-found)
