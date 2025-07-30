@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Renova.RabbitMQ.Interfaces;
 using Renova.RabbitMQ.Options;
 
-
 namespace Renova.RabbitMQ;
 
 public static class RabbitMQExtension

@@ -46,6 +46,9 @@ public static class ApiSetup
         //配置事件总线
         builder.Services.AddEventBusSetup();
 
+        //配置HTTP工厂服务
+        builder.Services.AddHttpClient();
+
         return builder;
     }
 

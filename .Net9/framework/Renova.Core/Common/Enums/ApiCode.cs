@@ -1,5 +1,4 @@
-﻿
-namespace Renova.Core;
+﻿namespace Renova.Core;
 
 /// <summary>
 /// Api 业务状态码枚举

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Renova.Core.Apps.Internal;
 
-
 namespace Renova.Core.Apps;
 
 /// <summary>

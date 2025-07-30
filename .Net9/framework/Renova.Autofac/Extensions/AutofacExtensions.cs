@@ -4,7 +4,6 @@ using Microsoft.Extensions.Hosting;
 using Renova.Core;
 using System.Diagnostics;
 
-
 namespace Renova.Autofac;
 
 /// <summary>
