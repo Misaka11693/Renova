@@ -32,7 +32,7 @@ public class SwaggerGroup : IConfigureOptions<SwaggerGenOptions>
 
     private void RegisterRequiredGroups(SwaggerGenOptions options)
     {
-        foreach (var doc in SwaggerSetup.ApiDocs)
+        foreach (var doc in SwaggerConstants.ApiDocs)
         {
             options.SwaggerDoc(doc.Key, doc.Value);
         }
@@ -46,7 +46,7 @@ public class SwaggerGroup : IConfigureOptions<SwaggerGenOptions>
             .Select(api => api.GroupName)
             .Where(groupName =>
                 !string.IsNullOrEmpty(groupName) &&  // 过滤未分组
-                !SwaggerSetup.ApiDocs.ContainsKey(groupName))// 排除
+                !SwaggerConstants.ApiDocs.ContainsKey(groupName))// 排除
             .Distinct();
 
         // 动态注册特性分组
@@ -66,14 +66,14 @@ public class SwaggerGroup : IConfigureOptions<SwaggerGenOptions>
         options.DocInclusionPredicate((docName, apiDesc) =>
         {
             // 规则1：All分组包含所有接口
-            if (docName == SwaggerSetup.AllGroupName) return true;
+            if (docName == SwaggerConstants.AllGroupName) return true;
 
             // 规则2：获取当前接口的分组名称（由[ApiExplorerSettings]设置）
             var groupName = apiDesc.GroupName;
 
             // 规则3：Default分组的特殊处理
-            if (docName == SwaggerSetup.DefaultGroupName)
-                return string.IsNullOrEmpty(groupName) || groupName == SwaggerSetup.DefaultGroupName;
+            if (docName == SwaggerConstants.DefaultGroupName)
+                return string.IsNullOrEmpty(groupName) || groupName == SwaggerConstants.DefaultGroupName;
 
             // 规则4：其他分组进行名称匹配
             return groupName == docName;

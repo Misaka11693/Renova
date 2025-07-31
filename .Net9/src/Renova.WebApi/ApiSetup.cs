@@ -63,7 +63,7 @@ public static class ApiSetup
         {
             app.MapOpenApi();
 
-            app.AddSwagger();
+            app.UseSwaggerSetup();
 
             //app.UseDeveloperExceptionPage();
         }
