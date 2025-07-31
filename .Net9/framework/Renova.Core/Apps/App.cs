@@ -17,6 +17,7 @@ namespace Renova.Core;
 
 /// <summary>
 /// 全局应用类
+/// 参考：https://github.com/MonkSoul/Furion/blob/v4/framework/Furion/App/App.cs
 /// </summary>
 public static class App
 {
