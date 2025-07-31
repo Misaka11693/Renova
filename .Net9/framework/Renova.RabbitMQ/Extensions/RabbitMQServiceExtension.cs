@@ -5,7 +5,7 @@ using Renova.RabbitMQ.Options;
 
 namespace Renova.RabbitMQ;
 
-public static class RabbitMQExtension
+public static class RabbitMQServiceExtension
 {
     public static IServiceCollection AddRabbitMQSetup(this IServiceCollection services)
     {
