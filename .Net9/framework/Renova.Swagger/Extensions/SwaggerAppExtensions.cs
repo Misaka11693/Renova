@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Renova.Swagger;
 
-public static class SwaggerApplicationBuilderExtensions
+public static class SwaggerAppExtensions
 {
     /// <summary>
     /// 配置Swagger中间件
@@ -13,6 +13,7 @@ public static class SwaggerApplicationBuilderExtensions
     public static IApplicationBuilder UseSwaggerSetup(this IApplicationBuilder app)
     {
         app.UseSwagger();
+
         app.UseSwaggerUI(c =>
         {
             #region 动态加载分组

@@ -18,6 +18,7 @@ public static class SwaggerConstants
             Version = "v1.0.0",
             Description = "系统所有可用接口的完整集合"
         },
+
         [DefaultGroupName] = new OpenApiInfo
         {
             Title = "⚙️ 默认分组",
