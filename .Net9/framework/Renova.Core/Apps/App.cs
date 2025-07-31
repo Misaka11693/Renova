@@ -307,7 +307,16 @@ public static class App
         //var dependencyContext = DependencyContext.Default;//单文件夹部署用不了
 
         // 程序集名称前缀
-        var projectAssemblies = new string[] { "Renova." };
+        var assemblyPrefixes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Renova." };
+
+        //从配置文件中读取程序集名称前缀，加入到projectAssemblies
+        //AssemblyPrefixes：["Renova.", "MyApp."]
+        // 从配置读取自定义前缀
+        var configPrefixes = Configuration?.GetSection("AssemblyPrefixes")?.Get<string[]>();
+        if (configPrefixes != null)
+        {
+            assemblyPrefixes.UnionWith(configPrefixes.Where(p => !string.IsNullOrWhiteSpace(p)));
+        }
 
         var assemblies = new List<Assembly>();
 
@@ -316,7 +325,7 @@ public static class App
         foreach (var dllFile in dllFiles)
         {
             var fileName = Path.GetFileNameWithoutExtension(dllFile);
-            if (!projectAssemblies.Any(s => fileName.StartsWith(s))) continue;
+            if (!assemblyPrefixes.Any(prefix => fileName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))) continue;
             try
             {
                 var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(dllFile);
@@ -324,7 +333,10 @@ public static class App
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to load assembly: {fileName}. Error: {e.Message}");
+                //Console.WriteLine($"Failed to load assembly: {fileName}. Error: {e.Message}");
+
+                //抛出异常，中断程序
+                throw new Exception($"Failed to load assembly: {fileName}. Error: {e.Message}");
             }
         }
 
