@@ -1,6 +1,7 @@
 ﻿using Renova.Core;
 using Renova.Core.Apps;
 using Renova.EventBus;
+using Renova.FileStorage.Extensions;
 using Renova.Swagger;
 using Simple.DynamicWebApi;
 
@@ -40,13 +41,19 @@ public static class ApiSetup
         //配置动态 API 服务
         builder.Services.AddDynamicWebApi();
 
-        //配置Swagger（如果前端没有获取到最新swagger.json文件，可以通过清除浏览器的缓存来解决，快捷键为 Ctrl + Shift + R）
+        //配置 Swagger（如果前端没有获取到最新swagger.json文件，可以通过清除浏览器的缓存来解决，快捷键为 Ctrl + Shift + R）
         builder.Services.AddSwaggerSetup();
 
         //配置事件总线
         builder.Services.AddEventBusSetup();
 
-        //配置HTTP工厂服务
+        //配置文件存储服务
+        builder.Services.AddFileStorageSetup();
+
+        //配置 HttpContext 访问器(用于构造函数注入 HttpContext 对象)
+        builder.Services.AddHttpContextAccessor();
+
+        //配置 HTTP 工厂服务
         builder.Services.AddHttpClient();
 
         return builder;
@@ -71,6 +78,8 @@ public static class ApiSetup
         app.UseExceptionHandler();
 
         app.UseApplication();
+
+        app.UseStaticFiles();//浏览器输入 wwwroot 目录下的文件可以直接访问
 
         app.UseHttpsRedirection();
 

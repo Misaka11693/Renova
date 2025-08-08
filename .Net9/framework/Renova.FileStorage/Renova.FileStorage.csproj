@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aliyun.OSS.SDK.NetCore" Version="2.14.1" />
+    <PackageReference Include="FluentFTP" Version="53.0.1" />
+    <PackageReference Include="HuaweiCloud.SDK.OBS" Version="3.0.3" />
+    <PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
+    <PackageReference Include="Qiniu" Version="8.7.0" />
+    <PackageReference Include="SSH.NET" Version="2025.0.0" />
+    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.48" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
+  </ItemGroup>
+
+</Project>
