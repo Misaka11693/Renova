@@ -313,7 +313,7 @@ public static class App
         //从配置文件中读取程序集名称前缀，加入到projectAssemblies
         //AssemblyPrefixes：["Renova.", "MyApp."]
         // 从配置读取自定义前缀
-        var configPrefixes = Configuration?.GetSection("AssemblyPrefixes")?.Get<string[]>();
+        var configPrefixes = Configuration?.GetSection("App:AssemblyPrefixes")?.Get<string[]>();
         if (configPrefixes != null)
         {
             assemblyPrefixes.UnionWith(configPrefixes.Where(p => !string.IsNullOrWhiteSpace(p)));
