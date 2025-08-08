@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /.Net9/src/Renova.WebApi/appsettings.Development.json
 /.Net9/src/Renova.WebApi/appsettings.json
+/.Net9/src/Renova.WebApi/appsettings.Development.json
+/.Net9/src/Renova.WebApi/appsettings.json
