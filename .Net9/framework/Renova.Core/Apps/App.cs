@@ -321,7 +321,7 @@ public static class App
 
         var assemblies = new List<Assembly>();
 
-        var dllFiles = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"); //D:\MyEasyDotNet\EWms\EWms.Api\EWms.Api\bin\Debug\net9.0\
+        var dllFiles = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"); 
 
         foreach (var dllFile in dllFiles)
         {
