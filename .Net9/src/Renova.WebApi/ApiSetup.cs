@@ -2,6 +2,7 @@
 using Renova.Core.Apps;
 using Renova.EventBus;
 using Renova.FileStorage.Extensions;
+using Renova.Localization.Extensions;
 using Renova.Swagger;
 using Simple.DynamicWebApi;
 
@@ -56,6 +57,11 @@ public static class ApiSetup
         //配置 HTTP 工厂服务
         builder.Services.AddHttpClient();
 
+        //配置 CORS
+        builder.Services.AddCorsSetup();
+
+        builder.Services.AddAppLocalization();
+
         return builder;
     }
 
@@ -79,7 +85,10 @@ public static class ApiSetup
 
         app.UseApplication();
 
-        app.UseStaticFiles();//浏览器输入 wwwroot 目录下的文件可以直接访问
+        app.UseRequestLocalizationMiddewar();
+
+        //浏览器输入 wwwroot 目录下的文件可以直接访问
+        app.UseStaticFiles();
 
         app.UseHttpsRedirection();
 

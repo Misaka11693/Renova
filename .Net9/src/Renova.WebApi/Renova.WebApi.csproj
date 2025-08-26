@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\framework\Renova.Core\Renova.Core.csproj" />
     <ProjectReference Include="..\..\framework\Renova.EventBus\Renova.EventBus.csproj" />
     <ProjectReference Include="..\..\framework\Renova.FileStorage\Renova.FileStorage.csproj" />
+    <ProjectReference Include="..\..\framework\Renova.Localization\Renova.Localization.csproj" />
     <ProjectReference Include="..\..\framework\Renova.RabbitMQ\Renova.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\framework\Renova.Serilog\Renova.Serilog.csproj" />
     <ProjectReference Include="..\..\framework\Renova.Swagger\Renova.Swagger.csproj" />
