@@ -45,11 +45,11 @@ public static class StringExtensions
     /// <returns>本地化并格式化后的字符串</returns>
     /// <example>
     /// <code>
-    /// var message = "当前时间是 {0}".L10NFormat("en-US", DateTime.Now);
+    /// var message = "当前时间是 {0}".L10NFormatWithCulture("en-US", DateTime.Now);
     /// </code>
     /// </example>
-    //public static string L10NFormat(this string key, string culture, params object[] args)
-    //{
-    //    return string.Format(key.L10N(culture), args);
-    //}
+    public static string L10NFormatWithCulture(this string key, string culture, params object[] args)
+    {
+        return string.Format(key.L10N(culture), args);
+    }
 }
