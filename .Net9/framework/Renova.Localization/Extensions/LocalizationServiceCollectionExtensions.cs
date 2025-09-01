@@ -9,14 +9,17 @@ namespace Renova.Localization.Extensions;
 
 public static class LocalizationServiceCollectionExtensions
 {
+    /// <summary>
+    /// 本地化服务，根据配置使用 JSON 或 RESX 资源文件
+    /// </summary>
     public static IServiceCollection AddAppLocalization(this IServiceCollection services)
     {
-        //注册选项
+        // 注册选项
         services.AddOptions<AppLocalizationOptions>()
             .BindConfiguration(AppLocalizationOptions.SectionName)
             .ValidateDataAnnotations();
 
-        //获取配置选项
+        // 获取配置选项
         var options = App.GetOptions<AppLocalizationOptions>();
 
         // 根据配置选择实现
@@ -25,6 +28,7 @@ public static class LocalizationServiceCollectionExtensions
             services.AddJsonLocalization(opt =>
             {
                 opt.ResourcesPath = options.ResourcesPath;
+                opt.ResourcesType = options.JsonResourcesType;
             });
 
             services.AddSingleton<ILocalizationService, ResourceLocalizerService>();
@@ -46,6 +50,9 @@ public static class LocalizationServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// 请求本地化中间件
+    /// </summary>
     public static IApplicationBuilder UseRequestLocalizationMiddewar(this IApplicationBuilder app)
     {
         var localizationOptions = App.GetOptions<AppLocalizationOptions>();

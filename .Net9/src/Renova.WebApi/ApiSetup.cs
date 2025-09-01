@@ -19,14 +19,14 @@ public static class ApiSetup
     /// <param name="builder"></param>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
-        //配置过滤器
+        // 配置过滤器
         builder.Services.AddControllers(option =>
         {
-            //Api统一响应格式 
+            // Api统一响应格式 
             option.Filters.Add(typeof(ApiResponseFilter));
         });
 
-        //配置应用,优先级最高
+        // 配置应用,优先级最高
         builder.ConfigureApplication();
 
         // Add services to the container.
@@ -39,27 +39,28 @@ public static class ApiSetup
         builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        //配置动态 API 服务
+        // 配置动态 API 服务
         builder.Services.AddDynamicWebApi();
 
-        //配置 Swagger（如果前端没有获取到最新swagger.json文件，可以通过清除浏览器的缓存来解决，快捷键为 Ctrl + Shift + R）
+        // 配置 Swagger（如果前端没有获取到最新swagger.json文件，可以通过清除浏览器的缓存来解决，快捷键为 Ctrl + Shift + R）
         builder.Services.AddSwaggerSetup();
 
-        //配置事件总线
+        // 配置事件总线
         builder.Services.AddEventBusSetup();
 
-        //配置文件存储服务
+        // 配置文件存储服务
         builder.Services.AddFileStorageSetup();
 
-        //配置 HttpContext 访问器(用于构造函数注入 HttpContext 对象)
+        // 配置 HttpContext 访问器(用于构造函数注入 HttpContext 对象)
         builder.Services.AddHttpContextAccessor();
 
-        //配置 HTTP 工厂服务
+        // 配置 HTTP 工厂服务
         builder.Services.AddHttpClient();
 
-        //配置 CORS
+        // 配置 CORS
         builder.Services.AddCorsSetup();
 
+        // 配置本地化服务
         builder.Services.AddAppLocalization();
 
         return builder;
@@ -85,9 +86,10 @@ public static class ApiSetup
 
         app.UseApplication();
 
+        // 本地化中间件
         app.UseRequestLocalizationMiddewar();
 
-        //浏览器输入 wwwroot 目录下的文件可以直接访问
+        // 浏览器输入 wwwroot 目录下的文件可以直接访问
         app.UseStaticFiles();
 
         app.UseHttpsRedirection();
