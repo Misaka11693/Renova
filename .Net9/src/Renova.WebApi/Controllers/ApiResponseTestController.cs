@@ -151,5 +151,25 @@ namespace Renova.WebApi.Controllers
         {
             return "Direct string without IActionResult";
         }
+
+                /// <summary>
+        /// 模拟 401 未认证
+        /// </summary>
+        [HttpGet("unauthorized")]
+        public IActionResult SimulateUnauthorized()
+        {
+            // 返回 401 状态码
+            return Unauthorized(new { Message = "You are not authenticated." });
+        }
+
+        /// <summary>
+        /// 模拟 403 禁止访问
+        /// </summary>
+        [HttpGet("forbidden")]
+        public IActionResult SimulateForbidden()
+        {
+            // 返回 403 状态码
+            return Forbid(); // 也可以用 StatusCode(StatusCodes.Status403Forbidden)
+        }
     }
 }

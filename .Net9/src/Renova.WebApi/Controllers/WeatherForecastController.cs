@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Renova.Security.Authorization.Attributes;
+using static COSXML.Model.Object.PostObjectRequest;
 
 namespace Renova.Controllers
 {
@@ -30,6 +33,8 @@ namespace Renova.Controllers
         /// 获取天气预报信息
         /// </summary>
         /// <returns></returns>
+        //[AllowAnonymous]
+        [Authorize(Policy = "WeatherForecast:Get")]
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {

@@ -3,6 +3,7 @@ using Renova.Core.Apps;
 using Renova.EventBus;
 using Renova.FileStorage.Extensions;
 using Renova.Localization.Extensions;
+using Renova.Security.Extensions;
 using Renova.Swagger;
 using Simple.DynamicWebApi;
 
@@ -63,6 +64,9 @@ public static class ApiSetup
         // 配置本地化服务
         builder.Services.AddAppLocalization();
 
+        // 配置安全认证服务
+        //builder.Services.AddSecuritySetup();
+
         return builder;
     }
 
@@ -94,6 +98,10 @@ public static class ApiSetup
 
         app.UseHttpsRedirection();
 
+        // 认证
+        //app.UseAuthentication();
+
+        // 授权
         app.UseAuthorization();
 
         app.MapControllers();
