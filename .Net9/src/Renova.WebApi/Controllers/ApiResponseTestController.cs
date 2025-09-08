@@ -27,7 +27,9 @@ namespace Renova.WebApi.Controllers
         [HttpGet("custom-status")]
         public IActionResult GetWithCustomStatus()
         {
-            return StatusCode(StatusCodes.Status202Accepted, new { Message = "Processing" });
+            //return StatusCode(StatusCodes.Status202Accepted, new { Message = "Processing" });
+            return StatusCode(StatusCodes.Status202Accepted, "Processing");
+
         }
 
         /// <summary>
@@ -138,6 +140,7 @@ namespace Renova.WebApi.Controllers
         /// 返回纯字符串内容（测试过滤器对字符串的包装）
         /// </summary>
         [HttpGet("string-result")]
+        [SkipWrap]
         public IActionResult GetStringResult()
         {
             return Ok("This is a raw string response");
@@ -159,7 +162,8 @@ namespace Renova.WebApi.Controllers
         public IActionResult SimulateUnauthorized()
         {
             // 返回 401 状态码
-            return Unauthorized(new { Message = "You are not authenticated." });
+            //return Unauthorized(new { Message = "You are not authenticated." });
+            return Unauthorized("You are not authenticated.");
         }
 
         /// <summary>

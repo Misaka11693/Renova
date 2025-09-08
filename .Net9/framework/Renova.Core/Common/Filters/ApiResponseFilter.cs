@@ -1,145 +1,82 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Renova.Core;
 
 /// <summary>
-///  Api 统一响应格式过滤器
+/// API 统一响应格式过滤器
+/// 将指定类型的返回值统一包装成 ApiResponse 格式
 /// </summary>
 public class ApiResponseFilter : IAsyncResultFilter
 {
+    /// <summary>
+    /// 可被包装的 ActionResult 类型
+    /// </summary>
+    private static readonly Type[] WrappableResultTypes =
+    {
+        typeof(ObjectResult),     // Ok(), BadRequest(), return object
+        typeof(JsonResult),       // return Json(...)
+        typeof(ContentResult),    // return "string"
+        typeof(StatusCodeResult), // return StatusCode(200)（无数据）
+        typeof(EmptyResult)       // return NoContent()
+    };
+
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        if (ShouldSkipWrapper(context))
+        // 跳过不需要包装的结果
+        if (!ShouldWrap(context))
         {
             await next();
             return;
         }
 
-        // 包装结果
-        var (statusCode, value) = GetResultInfo(context);
+        // 提取状态码和返回值
+        var (statusCode, value) = ExtractResponseInfo(context);
 
-        object wrappedResult;
-        if (statusCode >= 200 && statusCode < 300)
-        {
-            // 成功响应 (2xx)
-            wrappedResult = ApiResponse.Success(data: value);
-        }
-        else
-        {
-            // 错误响应 (非2xx)
-            wrappedResult = ApiResponse.Error(
-                message: GetErrorMessage(statusCode),
-                data: value,
-                code: statusCode
-            );
-        }
+        // 成功返回 2xx，失败统一提示“操作失败”
+        var wrapped = statusCode is >= 200 and < 300
+            ? ApiResponse.Success(value, statusCode)
+            : ApiResponse.Error(value, statusCode);
 
-        context.Result = new ObjectResult(wrappedResult)
-        {
-            StatusCode = statusCode
-        };
+        context.Result = new ObjectResult(wrapped) { StatusCode = statusCode };
 
         await next();
     }
 
-    private bool ShouldSkipWrapper(ResultExecutingContext context)
+    /// <summary>
+    /// 判断当前结果是否需要包装
+    /// </summary>
+    private bool ShouldWrap(ResultExecutingContext context)
     {
-        var result = context.Result;
+        var resultType = context.Result.GetType();
 
-        // 特殊类型，跳过包装(文件、重定向、认证、登入登出、视图结果)
-        if (result is FileResult ||
-            result is RedirectResult ||
-            result is ChallengeResult ||
-            result is SignInResult ||
-            result is SignOutResult ||
-            result is ViewResult)
-        {
-            return true;
-        }
-
-        // 已是 ApiResponse 类型，跳过包装
-        if (result is ObjectResult objResult && objResult.Value is ApiResponse)
-        {
-            return true;
-        }
-
-        // 已标记 [SkipWrapAttribute]  跳过包装
+        // 跳过标记了 [SkipWrap] 的接口
         if (context.ActionDescriptor.EndpointMetadata.OfType<SkipWrapAttribute>().Any())
-        {
-            return true;
-        }
+            return false;
 
-        return false;
+        // 已经是 ApiResponse 类型的结果不再包装
+        if (context.Result is ObjectResult { Value: ApiResponse })
+            return false;
+
+        // 只包装允许的类型
+        return WrappableResultTypes.Any(t => t.IsAssignableFrom(resultType));
     }
 
     /// <summary>
-    /// 获取结果的状态码和值
+    /// 从 ActionResult 中提取状态码和数据
     /// </summary>
-    private (int statusCode, object? value) GetResultInfo(ResultExecutingContext context)
+    private static (int StatusCode, object? Data) ExtractResponseInfo(ResultExecutingContext context)
     {
+        var defaultCode = context.HttpContext.Response.StatusCode;
+
         return context.Result switch
         {
-            // 处理对象结果
-            ObjectResult objectResult => (
-                objectResult.StatusCode ?? context.HttpContext.Response.StatusCode,
-                objectResult.Value
-            ),
-
-            // 处理 JSON 结果
-            JsonResult jsonResult => (
-                jsonResult.StatusCode ?? context.HttpContext.Response.StatusCode,
-                jsonResult.Value
-            ),
-
-            // 处理内容结果
-            ContentResult contentResult => (
-                contentResult.StatusCode ?? context.HttpContext.Response.StatusCode,
-                contentResult.Content
-            ),
-
-            // 处理状态码结果
-            StatusCodeResult statusCodeResult => (
-                statusCodeResult.StatusCode,
-                null
-            ),
-
-            // 处理空结果
-            EmptyResult => (
-                context.HttpContext.Response.StatusCode != StatusCodes.Status200OK
-                    ? context.HttpContext.Response.StatusCode
-                    : StatusCodes.Status200OK,
-                null
-            ),
-
-            // 默认处理
-            _ => (
-                context.HttpContext.Response.StatusCode,
-                null
-            )
+            ObjectResult o => (o.StatusCode ?? defaultCode, o.Value),
+            JsonResult j => (j.StatusCode ?? defaultCode, j.Value),
+            ContentResult c => (c.StatusCode ?? defaultCode, c.Content),
+            StatusCodeResult s => (s.StatusCode, null), // StatusCodeResult 无数据
+            EmptyResult => (defaultCode, null),
+            _ => (defaultCode, null)
         };
     }
-
-    /// <summary>
-    /// 根据状态码获取错误消息
-    /// </summary>
-    private string GetErrorMessage(int statusCode) => statusCode switch
-    {
-        StatusCodes.Status400BadRequest => "请求参数无效",
-        StatusCodes.Status401Unauthorized => "未授权访问",
-        StatusCodes.Status403Forbidden => "禁止访问",
-        StatusCodes.Status404NotFound => "资源不存在",
-        StatusCodes.Status409Conflict => "业务冲突",
-        StatusCodes.Status500InternalServerError => "服务器错误",
-        _ => $"操作失败 (状态码: {statusCode})"
-    };
-
-    //private bool IsApiResponse(object? value)
-    //{
-    //    if (value == null) return false;
-
-    //    var type = value.GetType();
-    //    return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ApiResponse<>);
-    //}
 }

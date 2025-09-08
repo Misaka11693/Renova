@@ -65,7 +65,7 @@ public static class ApiSetup
         builder.Services.AddAppLocalization();
 
         // 配置安全认证服务
-        //builder.Services.AddSecuritySetup();
+        builder.Services.AddSecuritySetup();
 
         return builder;
     }
