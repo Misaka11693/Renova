@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Renova.Core;
 using Renova.Security.Authentication.Abstractions;
 using Renova.Security.Authentication.Const;
 using System.Security.Claims;
@@ -30,9 +31,10 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login")]
     [AllowAnonymous]
+    //[SkipWrap]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        if (request.Username != "admin" || request.Password != "123456")
+        if (request.Username != "admin" || request.Password != "c4ca4238a0b923820dcc509a6f75849b")
         {
             return Unauthorized("用户名或密码错误");
         }
@@ -52,7 +54,7 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            AccessToken = accessToken,
+            access_token = accessToken,
             RefreshToken = refreshToken
         });
     }

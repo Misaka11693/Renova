@@ -90,6 +90,8 @@ public static class ApiSetup
 
         app.UseApplication();
 
+        //app.UseCors("DefaultPolicy");
+
         // 本地化中间件
         app.UseRequestLocalizationMiddewar();
 
