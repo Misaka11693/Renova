@@ -1,4 +1,6 @@
-﻿namespace Renova.Core;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Renova.Core;
 
 /// <summary>
 /// Api 业务状态码枚举
@@ -6,7 +8,7 @@
 /// </summary>
 public enum ApiCode
 {
-    Success = 0,              // 通用成功
+    Success = StatusCodes.Status200OK,              // 通用成功
     Failed = 1,               // 通用失败
 
     Unauthorized = 401,       // 未认证或Token过期

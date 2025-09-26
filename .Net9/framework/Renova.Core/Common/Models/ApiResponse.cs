@@ -37,8 +37,8 @@ public class ApiResponse
     /// <summary>
     /// 返回成功结果
     /// </summary>
-    public static ApiResponse Success(object? data = null, int code = (int)ApiCode.Success, string message = "操作成功")
-        => new ApiResponse(code, message, data);
+    public static ApiResponse Success(object? data = null)
+        => new ApiResponse((int)ApiCode.Success, "请求成功", data);
 
     /// <summary>
     /// 返回错误结果

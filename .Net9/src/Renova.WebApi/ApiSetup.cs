@@ -1,4 +1,5 @@
-﻿using Renova.Core;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Renova.Core;
 using Renova.Core.Apps;
 using Renova.EventBus;
 using Renova.FileStorage.Extensions;
@@ -20,13 +21,6 @@ public static class ApiSetup
     /// <param name="builder"></param>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
-        // 配置过滤器
-        builder.Services.AddControllers(option =>
-        {
-            // Api统一响应格式 
-            option.Filters.Add(typeof(ApiResponseFilter));
-        });
-
         // 配置应用,优先级最高
         builder.ConfigureApplication();
 
@@ -39,6 +33,9 @@ public static class ApiSetup
         // 注册全局异常处理器
         builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        // 配置统一 API 响应
+        builder.Services.AddApiResponseFilter<ApiResponseProvider>();
 
         // 配置动态 API 服务
         builder.Services.AddDynamicWebApi();
@@ -67,6 +64,15 @@ public static class ApiSetup
         // 配置安全认证服务
         builder.Services.AddSecuritySetup();
 
+        // Ngix 代理时，获取客户端真实 IP
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+            //options.KnownNetworks.Clear();
+            //options.KnownProxies.Clear();
+        });
+
         return builder;
     }
 
@@ -89,6 +95,9 @@ public static class ApiSetup
         app.UseExceptionHandler();
 
         app.UseApplication();
+
+        // 使用转发头中间件
+        app.UseForwardedHeaders();
 
         //app.UseCors("DefaultPolicy");
 
