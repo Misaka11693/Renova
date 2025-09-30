@@ -53,7 +53,7 @@ public static class ApiSetup
         //
         // 应确保异常仅捕获一次、日志仅记录一次、响应仅写入一次，避免上述问题，故不使用.NET8新增的全局异常处理功能
         // builder.Services.AddProblemDetails();
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
         // 配置动态 API 服务
         builder.Services.AddDynamicWebApi();
