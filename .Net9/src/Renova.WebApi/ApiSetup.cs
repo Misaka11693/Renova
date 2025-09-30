@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Renova.Core.Apps;
-using Renova.Core.Exceptions;
 using Renova.Core.Extensions;
 using Renova.EventBus;
 using Renova.FileStorage.Extensions;
@@ -114,6 +113,7 @@ public static class ApiSetup
         //https://github.com/dotnet/aspnetcore/blob/main/src/Middleware/Diagnostics/src/ExceptionHandler/ExceptionHandlerExtensions.cs
         //app.UseExceptionHandler();
 
+        // 全局异常处理中间件
         app.UseGlobalExceptionHandling();
 
         // api 响应状态码处理中间件
