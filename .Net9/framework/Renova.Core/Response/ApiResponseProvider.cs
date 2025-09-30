@@ -32,7 +32,7 @@ public class ApiResponseProvider : IApiResponseProvider
     /// </summary>
     public IActionResult OnSucceeded(ResultExecutingContext context, object? data)
     {
-        var response = ResTfulResult(statusCode: StatusCodes.Status200OK, message: "请求成功", data: data);
+        var response = RestfulResult(statusCode: StatusCodes.Status200OK, message: "请求成功", data: data);
         //return new JsonResult(response, _jsonSerializerSettings); //无需使用_jsonSerializerSettings配置序列化格式
         return new JsonResult(response);
     }
@@ -42,7 +42,7 @@ public class ApiResponseProvider : IApiResponseProvider
     /// </summary>
     public object OnException(HttpContext httpContext, Exception exception)
     {
-        var response = ResTfulResult(statusCode: StatusCodes.Status500InternalServerError, errors: exception.Message);
+        var response = RestfulResult(statusCode: StatusCodes.Status500InternalServerError, errors: exception.Message);
         //return new JsonResult(response, _jsonSerializerSettings); //无需使用_jsonSerializerSettings配置序列化格式
         //return new JsonResult(response);
         return response;
@@ -61,11 +61,11 @@ public class ApiResponseProvider : IApiResponseProvider
         switch (statusCode)
         {
             case StatusCodes.Status401Unauthorized:
-                response = ResTfulResult(statusCode: statusCode, errors: "登录已过期，请重新登录");
+                response = RestfulResult(statusCode: statusCode, errors: "登录已过期，请重新登录");
                 break;
 
             case StatusCodes.Status403Forbidden:
-                response = ResTfulResult(statusCode: statusCode, errors: "禁止访问，没有权限", data: context.Request.Path);
+                response = RestfulResult(statusCode: statusCode, errors: "禁止访问，没有权限", data: context.Request.Path);
                 break;
 
             default:
@@ -82,9 +82,9 @@ public class ApiResponseProvider : IApiResponseProvider
     }
 
     /// <summary>
-    /// Restful 风格响应结果
+    /// RestfulResult 风格响应结果
     /// </summary>
-    private ApiResponse ResTfulResult(int statusCode, string? message = null, object? data = null, object? errors = null)
+    private ApiResponse RestfulResult(int statusCode, string? message = null, object? data = null, object? errors = null)
     {
         return new ApiResponse
         {
