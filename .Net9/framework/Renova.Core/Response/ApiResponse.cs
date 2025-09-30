@@ -1,4 +1,4 @@
-﻿namespace Renova.Core;
+﻿namespace Renova.Core.Response;
 
 /// <summary>
 /// 统一 API 响应模型 
@@ -13,7 +13,7 @@ public class ApiResponse
     /// <summary>
     /// 响应状态信息
     /// </summary>
-    public string? Message { get; set; }
+    public object? Message { get; set; }
 
     /// <summary>
     /// 响应数据
@@ -33,17 +33,5 @@ public class ApiResponse
         Message = message;
         Data = data;
     }
-
-    /// <summary>
-    /// 返回成功结果
-    /// </summary>
-    public static ApiResponse Success(object? data = null)
-        => new ApiResponse((int)ApiCode.Success, "请求成功", data);
-
-    /// <summary>
-    /// 返回错误结果
-    /// </summary>
-    public static ApiResponse Error(object? data = null, int code = (int)ApiCode.Failed, string message = "操作失败")
-        => new ApiResponse(code, message, data);
 }
 

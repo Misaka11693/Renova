@@ -63,12 +63,12 @@ namespace Renova.WebApi.Controllers
         /// <summary>
         /// 预包装的ApiResponse（跳过二次包装）
         /// </summary>
-        [HttpGet("pre-wrapped")]
-        public IActionResult GetPreWrappedResponse()
-        {
-            var response = ApiResponse.Success(new { Data = "Already wrapped" });
-            return Ok(response);
-        }
+        //[HttpGet("pre-wrapped")]
+        //public IActionResult GetPreWrappedResponse()
+        //{
+        //    var response = ApiResponse.Success(new { Data = "Already wrapped" });
+        //    return Ok(response);
+        //}
 
         /// <summary>
         /// 跳过包装的端点（直接返回原始格式）

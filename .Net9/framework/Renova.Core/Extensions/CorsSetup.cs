@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Renova.Core;
+namespace Renova.Core.Extensions;
 
 /// <summary>
 /// CORS 配置扩展

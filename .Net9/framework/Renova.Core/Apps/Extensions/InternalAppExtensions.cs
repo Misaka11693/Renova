@@ -25,7 +25,7 @@ public static class InternalAppExtensions
     }
 
     /// <summary>
-    /// 配置中间件
+    /// 配置App
     /// </summary>
     /// <param name="app">WebApplication</param>
     public static void UseApplication(this IApplicationBuilder app)
@@ -33,7 +33,7 @@ public static class InternalAppExtensions
         // 存储根服务提供器
         InternalApp.RootServices ??= app.ApplicationServices;
 
-        // 添加中间件，在每次请求结束时释放未托管的服务提供器
+        //添加中间件，在每次请求结束时释放未托管的服务提供器
         app.Use(async (context, next) =>
         {
             try

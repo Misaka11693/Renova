@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Renova.Core.Response;
 
-namespace Renova.Core;
+namespace Renova.Core.Filters;
 
 /// <summary>
 /// API 统一响应格式过滤器
@@ -13,14 +15,14 @@ public class ApiResponseFilter : IAsyncResultFilter
     /// <summary>
     /// API 统一响应提供器
     /// </summary>
-    private readonly IApiResponseProvider _provider;
+    private readonly IApiResponseProvider _responseProvider;
 
     /// <summary>
     /// 构造函数
     /// </summary>
     public ApiResponseFilter(IApiResponseProvider provider)
     {
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _responseProvider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
     /// <summary>
@@ -35,6 +37,9 @@ public class ApiResponseFilter : IAsyncResultFilter
         //typeof(EmptyResult)       // return NoContent() 2025-9-26 移除对 EmptyResult 的包装
     };
 
+    /// <summary>
+    ///  执行结果过滤器
+    /// </summary>
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
         // 跳过不需要包装的结果 or 响应已开始写入
@@ -46,19 +51,9 @@ public class ApiResponseFilter : IAsyncResultFilter
 
         // 提取状态码和返回值
         var (statusCode, data) = ExtractResponseInfo(context);
-        context.Result = _provider.OnSucceeded(context, data);
+        context.Result = (JsonResult)_responseProvider.OnSucceeded(context, data);
 
         await next();
-
-
-        // 成功返回 2xx，失败统一提示“操作失败”
-        //var wrapped = statusCode is >= 200 and < 300
-        //    ? ApiResponse.Success(value, statusCode)
-        //    : ApiResponse.Error(value, statusCode);
-
-        //context.Result = new ObjectResult(wrapped) { StatusCode = statusCode };
-
-        //await next();
     }
 
     /// <summary>
@@ -67,7 +62,7 @@ public class ApiResponseFilter : IAsyncResultFilter
     private bool ShouldWrap(ResultExecutingContext context)
     {
         // 1.跳过 WebSocket 请求
-        if (context.HttpContext.WebSockets.IsWebSocketRequest)
+        if (context.HttpContext.IsWebSocketRequest())
             return false;
 
         // 2.跳过标记了 [SkipWrap] 的接口
@@ -86,8 +81,8 @@ public class ApiResponseFilter : IAsyncResultFilter
         // 5.包装 2xx 成功状态码，其他状态码不包装
         if (context.Result is IStatusCodeActionResult statusCodeResult)
         {
-            var code = statusCodeResult.StatusCode;
-            return code.HasValue && code.Value is >= 200 and < 300;
+            var code = statusCodeResult.StatusCode ?? StatusCodes.Status200OK;
+            return code is >= 200 and < 300;
         }
 
         return true;
@@ -98,24 +93,19 @@ public class ApiResponseFilter : IAsyncResultFilter
     /// </summary>
     private static (int StatusCode, object? Data) ExtractResponseInfo(ResultExecutingContext context)
     {
-        var defaultCode = context.HttpContext.Response.StatusCode;
+        int statusCode = StatusCodes.Status200OK; // 默认 200
+
+        if (context.Result is IStatusCodeActionResult statusCodeResult)
+        {
+            statusCode = statusCodeResult.StatusCode ?? StatusCodes.Status200OK;
+        }
 
         return context.Result switch
         {
-            ObjectResult o => (o.StatusCode ?? defaultCode, o.Value),
-            JsonResult j => (j.StatusCode ?? defaultCode, j.Value),
-            ContentResult c => (c.StatusCode ?? defaultCode, c.Content),
-            _ => (defaultCode, null) // 理论上不会触发
+            ObjectResult o => (o.StatusCode ?? statusCode, o.Value),
+            JsonResult j => (j.StatusCode ?? statusCode, j.Value),
+            ContentResult c => (c.StatusCode ?? statusCode, c.Content),
+            _ => (statusCode, null) // 理论上不会触发
         };
-
-        //return context.Result switch
-        //{
-        //    ObjectResult o => (o.StatusCode ?? defaultCode, o.Value),
-        //    JsonResult j => (j.StatusCode ?? defaultCode, j.Value),
-        //    ContentResult c => (c.StatusCode ?? defaultCode, c.Content),
-        //    StatusCodeResult s => (s.StatusCode, null), // StatusCodeResult 无数据
-        //    EmptyResult => (defaultCode, null),
-        //    _ => (defaultCode, null)
-        //};
     }
 }

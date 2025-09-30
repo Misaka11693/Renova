@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Renova.Security.Authorization.Attributes;
-using static COSXML.Model.Object.PostObjectRequest;
 
 namespace Renova.Controllers
 {
@@ -38,6 +36,8 @@ namespace Renova.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            //throw new Exception("测试全局异常处理");
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
-using Renova.Core;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Renova.Core.Apps;
+using Renova.Core.Exceptions;
+using Renova.Core.Extensions;
 using Renova.EventBus;
 using Renova.FileStorage.Extensions;
 using Renova.Localization.Extensions;
@@ -21,21 +24,36 @@ public static class ApiSetup
     /// <param name="builder"></param>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
+        //builder.Logging.ClearProviders();//移除已经注册的其他日志处理程序
+
         // 配置应用,优先级最高
         builder.ConfigureApplication();
 
         // Add services to the container.
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();// 首字母小写（驼峰样式）
+            options.SerializerSettings.DateFormatString = "yyyy-MM-dd";// 时间格式化
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;// 忽略循环引用
+        }).AddApiResponseProvider();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        // 注册全局异常处理器
-        builder.Services.AddProblemDetails();
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        // 配置统一 API 响应过滤器
+        builder.Services.AddApiResponseFilter();
 
-        // 配置统一 API 响应
-        builder.Services.AddApiResponseFilter<ApiResponseProvider>();
+        // 全局异常处理（.NET 8 新增功能，已注释）
+        // 注释原因：
+        // 1. 日志重复：同一个异常会被记录两次 —— 
+        //    一次由 ASP.NET Core 内置的 ExceptionHandlerMiddleware 自动记录（app.UseExceptionHandler() .NET 8新增），
+        //    另一次由自定义的 Renova.Core.GlobalExceptionHandler 手动记录；
+        // 2. 异常重复抛出：在 Visual Studio 中调试时，抛出异常后需点击“继续”两次，
+        //    因为异常先在控制器抛出，又被异常处理管道重新触发，导致调试器中断两次；
+        //
+        // 应确保异常仅捕获一次、日志仅记录一次、响应仅写入一次，避免上述问题，故不使用.NET8新增的全局异常处理功能
+        // builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
         // 配置动态 API 服务
         builder.Services.AddDynamicWebApi();
@@ -89,17 +107,22 @@ public static class ApiSetup
 
             app.UseSwaggerSetup();
 
-            //app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
         }
 
-        app.UseExceptionHandler();
+        // .NET的异常处理中间件，自定义的全局异常处理器替代，中间件源码：
+        //https://github.com/dotnet/aspnetcore/blob/main/src/Middleware/Diagnostics/src/ExceptionHandler/ExceptionHandlerExtensions.cs
+        //app.UseExceptionHandler();
 
-        app.UseApplication();
+        app.UseGlobalExceptionHandling();
+
+        // api 响应状态码处理中间件
+        app.UseApiResponseStatusHandling();
 
         // 使用转发头中间件
         app.UseForwardedHeaders();
 
-        //app.UseCors("DefaultPolicy");
+        app.UseApplication();
 
         // 本地化中间件
         app.UseRequestLocalizationMiddewar();
@@ -110,7 +133,7 @@ public static class ApiSetup
         app.UseHttpsRedirection();
 
         // 认证
-        //app.UseAuthentication();
+        app.UseAuthentication();
 
         // 授权
         app.UseAuthorization();

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-namespace Renova.Core;
+namespace Renova.Core.Response;
 
 /// <summary>
 /// API 统一响应提供器
@@ -14,9 +14,12 @@ public interface IApiResponseProvider
     IActionResult OnSucceeded(ResultExecutingContext context, object? data);
 
     /// <summary>
-    /// 构造错误响应
+    /// 构建错误响应
     /// </summary>
-    IActionResult OnError(ActionExecutedContext context, object? data, int statusCode, string? message = null);
+    /// <param name="httpContext"></param>
+    /// <param name="exception"></param>
+    /// <returns></returns>
+    object OnException(HttpContext httpContext, Exception exception);
 
     /// <summary>
     /// 拦截返回状态码
