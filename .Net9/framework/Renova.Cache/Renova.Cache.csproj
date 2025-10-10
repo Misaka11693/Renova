@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NewLife.Core" Version="11.7.2025.1001" />
+    <PackageReference Include="NewLife.Redis" Version="6.3.2025.1001" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
+  </ItemGroup>
+
+</Project>

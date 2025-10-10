@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Renova.Cache;
 using Renova.Core.Apps;
 using Renova.Core.Extensions;
 using Renova.EventBus;
@@ -59,6 +60,9 @@ public static class ApiSetup
 
         // 配置 Swagger（如果前端没有获取到最新swagger.json文件，可以通过清除浏览器的缓存来解决，快捷键为 Ctrl + Shift + R）
         builder.Services.AddSwaggerSetup();
+
+        // 配置缓存服务
+        builder.Services.AddCache();
 
         // 配置事件总线
         builder.Services.AddEventBusSetup();
