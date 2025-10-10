@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Renova.Core;
+using Renova.EventBus.Internal;
 using Renova.EventBus.Options;
 using Renova.EventBus.Storers;
 using Renova.RabbitMQ;
@@ -34,6 +35,8 @@ public static class EventBusServiceCollectionExtensions
                 {
                     return rbmqEventSourceStorer;
                 });
+
+                options.ReplacePublisher<DistributedEventPublisher>();
             });
         }
         else

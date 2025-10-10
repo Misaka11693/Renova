@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Renova.EventBus.Sources;
 using Renova.RabbitMQ.Interfaces;
 using System.Text;
 using System.Threading.Channels;
@@ -64,14 +65,14 @@ public class RabbitMQEventSourceStorer : IEventSourceStorer, IAsyncDisposable
         _logger = logger;
 
         // 初始化连接
-        _ = InitializeAsync();
+        InitializeRabbitMQAsync().GetAwaiter().GetResult();
     }
 
     /// <summary>
     /// 初始化 RabbitMQ 连接和订阅者，并开始监听消息队列。
     /// </summary>
     /// <returns></returns>
-    public async Task InitializeAsync()
+    public async Task InitializeRabbitMQAsync()
     {
         // 创建 RabbitMQ 通道
         _rabbitMQChannel = await _rabbitMqConnection!.CreateChannelAsync();
@@ -87,8 +88,11 @@ public class RabbitMQEventSourceStorer : IEventSourceStorer, IAsyncDisposable
         {
             try
             {
+                // 读取原始消息
                 var stringEventSource = Encoding.UTF8.GetString(ea.Body.ToArray());
-                var eventSource = JsonConvert.DeserializeObject<ChannelEventSource>(stringEventSource);
+
+                // 转换为 IEventSource，如果自定义了 EventSource，注意属性是可读可写
+                var eventSource = JsonConvert.DeserializeObject<DistributedEventSource>(stringEventSource);
 
                 if (eventSource != null)
                 {
@@ -128,16 +132,28 @@ public class RabbitMQEventSourceStorer : IEventSourceStorer, IAsyncDisposable
             throw new ArgumentNullException(nameof(eventSource));
         }
 
-        // 序列化事件源为 JSON
-        var json = JsonConvert.SerializeObject(eventSource);
-        var body = Encoding.UTF8.GetBytes(json);
-        var properties = new BasicProperties
+        if (eventSource is ChannelEventSource)
         {
-            Persistent = true // 设置消息持久化
-        };
+            // 写入存储器
+            await _memoryChannel.Writer.WriteAsync(eventSource, cancellationToken);
+        }
+        else if (eventSource is DistributedEventSource)
+        {
+            // 序列化事件源为 JSON
+            var json = JsonConvert.SerializeObject(eventSource);
+            var body = Encoding.UTF8.GetBytes(json);
+            var properties = new BasicProperties
+            {
+                Persistent = true // 设置消息持久化
+            };
 
-        // 发布到 RabbitMQ
-        await _rabbitMQChannel!.BasicPublishAsync("", _routeKey, false, properties, body, cancellationToken);
+            // 发布到 RabbitMQ
+            await _rabbitMQChannel!.BasicPublishAsync("", _routeKey, false, properties, body, cancellationToken);
+        }
+        else
+        {
+            throw new NotSupportedException($"不支持的事件类型: {eventSource.GetType()}");
+        }
     }
 
     /// <summary>

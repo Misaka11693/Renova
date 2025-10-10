@@ -17,5 +17,5 @@ public interface IRabbitMQConnection
     /// <summary>
     /// 尝试重新连接
     /// </summary>
-    Task<bool> TryConnectAsync();
+    //Task<bool> TryConnectAsync();
 }

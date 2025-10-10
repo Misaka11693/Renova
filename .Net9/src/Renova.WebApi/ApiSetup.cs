@@ -86,8 +86,8 @@ public static class ApiSetup
         {
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 
-            //options.KnownNetworks.Clear();
-            //options.KnownProxies.Clear();
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
         });
 
         return builder;
