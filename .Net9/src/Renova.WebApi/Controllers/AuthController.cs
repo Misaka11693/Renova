@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Renova.Core;
-using Renova.Security.Authentication.Abstractions;
-using Renova.Security.Authentication.Const;
+using Renova.Core.Components.Security.Authentication.Abstractions;
+using Renova.Core.Components.Security.Authentication.Const;
 using System.Security.Claims;
 
 namespace Renova.WebApi.Controllers;

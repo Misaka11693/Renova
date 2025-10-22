@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Security.Claims;
 
-namespace Renova.Core;
+namespace Renova.Core.Apps;
 
 /// <summary>
 /// 全局应用类
@@ -392,8 +392,8 @@ public static class App
     /// <remarks>适用于不需要响应配置变更的场景，配置在应用生命周期内保持不变</remarks>
     public static TOptions GetOptions<TOptions>(IServiceProvider? serviceProvider = null) where TOptions : class
     {
-        var provider = serviceProvider ?? App.RootServices;
-        return App.GetRequiredService<IOptions<TOptions>>(provider).Value;
+        var provider = serviceProvider ?? RootServices;
+        return GetRequiredService<IOptions<TOptions>>(provider).Value;
     }
 
     /// <summary>
@@ -405,8 +405,8 @@ public static class App
     /// <remarks>适用于需要响应配置变更的单例服务，可通过OnChange事件监听配置更新</remarks>
     public static TOptions GetOptionsMonitor<TOptions>(IServiceProvider? serviceProvider = null) where TOptions : class
     {
-        var provider = serviceProvider ?? App.RootServices;
-        return App.GetRequiredService<IOptionsMonitor<TOptions>>(provider).CurrentValue;
+        var provider = serviceProvider ?? RootServices;
+        return GetRequiredService<IOptionsMonitor<TOptions>>(provider).CurrentValue;
     }
 
     /// <summary>
@@ -420,7 +420,7 @@ public static class App
     public static TOptions GetOptionsSnapshot<TOptions>(IServiceProvider serviceProvider) where TOptions : class
     {
         if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-        return App.GetRequiredService<IOptionsSnapshot<TOptions>>(serviceProvider).Value;
+        return GetRequiredService<IOptionsSnapshot<TOptions>>(serviceProvider).Value;
     }
 
     #endregion

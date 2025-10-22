@@ -12,20 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\framework\Renova.Autofac\Renova.Autofac.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.Cache\Renova.Cache.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.Core\Renova.Core.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.EventBus\Renova.EventBus.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.FileStorage\Renova.FileStorage.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.Localization\Renova.Localization.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.RabbitMQ\Renova.RabbitMQ.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.Security\Renova.Security.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.Serilog\Renova.Serilog.csproj" />
-    <ProjectReference Include="..\..\framework\Renova.Swagger\Renova.Swagger.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\..\framework\Renova.Core\Renova.Core.csproj" />
   </ItemGroup>
 
 </Project>

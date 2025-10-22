@@ -1,6 +1,6 @@
 using Renova;
-using Renova.Autofac;
-using Renova.Serilog;
+using Renova.Core.Components.Autofac;
+using Renova.Core.Components.Serilog;
 using Serilog;
 
 
@@ -20,7 +20,7 @@ try
 
     """, "Version: 1.0", "生命如同一场旅程，每一步都值得珍惜；无论风雨还是晴空，未来总会因你的努力而更加美好");
 
-    Log.Information($" Renova.Admin ，Run! ");
+    Log.Information($"Renova.Admin ，Run! ");
     var builder = WebApplication.CreateBuilder(args);
     Log.Information($"当前主机启动环境-【{builder.Environment.EnvironmentName}】");
     Log.Information($"当前主机启动地址-【{builder.Configuration["App:SelfUrl"]}】");

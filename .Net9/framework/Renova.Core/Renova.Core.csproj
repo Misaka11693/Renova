@@ -1,17 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.7" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="Simple.DynamicWebApi" Version="1.0.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<!-- Web API 相关 -->
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.9" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="Simple.DynamicWebApi" Version="1.0.5" />
+
+		<!-- 依赖注入与宿主 -->
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.7" />
+
+		<!-- 本地化 -->
+		<PackageReference Include="My.Extensions.Localization.Json" Version="3.4.0" />
+
+		<!-- 数据库：SqlSugar ORM-->
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.205" />
+
+		<!-- RabbitMQ -->
+		<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+
+		<!-- 事件总线 -->
+		<PackageReference Include="Jaina" Version="4.4.0" />
+
+		<!-- 缓存 -->
+		<PackageReference Include="NewLife.Redis" Version="6.3.2025.1001" />
+
+		<!-- IoC 容器 -->
+		<PackageReference Include="Autofac" Version="8.4.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
+
+		<!-- 身份验证与授权 -->
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+
+		<!-- Swagger -->
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.3" />
+
+		<!-- 文件存储 -->
+		<PackageReference Include="FluentFTP" Version="53.0.1" />
+		<PackageReference Include="SSH.NET" Version="2025.0.0" />
+		<PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
+
+		<!-- 日志：Serilog -->
+		<PackageReference Include="Serilog" Version="4.3.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Serilog.Expressions" Version="5.0.0" />
+		<PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Common\AspNetCore\Filter\" />
+	</ItemGroup>
 
 </Project>

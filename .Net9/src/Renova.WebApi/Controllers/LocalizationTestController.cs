@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
+using Renova.Core.Components.Localization;
 
 namespace Renova.WebApi.Controllers
 {

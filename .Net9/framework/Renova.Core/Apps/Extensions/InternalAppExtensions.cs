@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Renova.Core.Apps.Internal;
 
-namespace Renova.Core.Apps;
+namespace Renova.Core.Apps.Extensions;
 
 /// <summary>
 /// 内部 App 副本扩展方法

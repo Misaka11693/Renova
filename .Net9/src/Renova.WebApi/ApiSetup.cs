@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Renova.Cache;
-using Renova.Core.Apps;
-using Renova.Core.Extensions;
-using Renova.EventBus;
-using Renova.FileStorage.Extensions;
-using Renova.Localization.Extensions;
-using Renova.Security.Extensions;
-using Renova.Swagger;
+using Renova.Core.Apps.Extensions;
+using Renova.Core.Components.Cache;
+using Renova.Core.Components.Cors;
+using Renova.Core.Components.EventBus;
+using Renova.Core.Components.FileStorage;
+using Renova.Core.Components.Localization;
+using Renova.Core.Components.Response;
+using Renova.Core.Components.Security.Extensions;
+using Renova.Core.Components.Swagger;
 using Simple.DynamicWebApi;
 
 namespace Renova;
@@ -80,7 +81,7 @@ public static class ApiSetup
         builder.Services.AddCorsSetup();
 
         // 配置本地化服务
-        builder.Services.AddAppLocalization();
+        builder.Services.AddLocalizationSetup();
 
         // 配置安全认证服务
         builder.Services.AddSecuritySetup();
@@ -108,7 +109,7 @@ public static class ApiSetup
         {
             app.MapOpenApi();
 
-            app.UseSwaggerSetup();
+            app.UseSwaggerMiddleware();
 
             app.UseDeveloperExceptionPage();
         }

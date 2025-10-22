@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Renova.FileStorage;
+using Renova.Core.Components.FileStorage.Providers;
 using System.Net.Mime;
 
 namespace Renova.WebApi.Controllers;

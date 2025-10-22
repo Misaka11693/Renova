@@ -1,4 +1,6 @@
-﻿namespace Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Renova.Core.Common.Extensions;
 
 /// <summary>
 ///  Http 扩展方法
