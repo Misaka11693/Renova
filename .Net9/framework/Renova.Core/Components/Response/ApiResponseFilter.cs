@@ -52,7 +52,7 @@ public class ApiResponseFilter : IAsyncResultFilter
 
         // 提取状态码和返回值
         var (statusCode, data) = ExtractResponseInfo(context);
-        context.Result = (JsonResult)_responseProvider.OnSucceeded(context, data);
+        context.Result = _responseProvider.OnSucceeded(context, data);
 
         await next();
     }

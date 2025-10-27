@@ -1,17 +1,15 @@
 ﻿using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Renova.Core.Components.SqlSugar;
 
-public interface ISqlSugarAopInterceptor
+public interface ISqlSugarAopProvider
 {
     //执行顺序：
     //DataExecuting → OnLogExecuting → 执行 SQL → OnLogExecuted → DataExecuted
+
+    // SQL 执行发生异常时触发:
+    // OnError
 
     /// <summary>
     /// 获取执行顺序
@@ -35,8 +33,9 @@ public interface ISqlSugarAopInterceptor
     /// SQL执行前触发
     /// </summary>
     /// <param name="sql">SQL语句</param>
+    /// <param name="enableConsoleSql">启用控制台打印SQL</param>
     /// <param name="parameters">SQL参数</param>
-    void OnLogExecuting(ISqlSugarClient db, string sql, SugarParameter[] pars);
+    void OnLogExecuting(ISqlSugarClient db, string sql, bool enableConsoleSql, SugarParameter[] pars);
 
     /// <summary>
     /// SQL执行后触发
@@ -58,4 +57,10 @@ public interface ISqlSugarAopInterceptor
     /// <param name="propertyInfo">属性信息</param>
     /// <param name="entityColumnInfo">实体列信息</param>
     void EntityService(PropertyInfo propertyInfo, EntityColumnInfo entityColumnInfo);
+
+    /// <summary>
+    /// SQL执行发生异常时触发
+    /// </summary>
+    /// <param name="exception">SqlSugar异常信息</param>
+    void OnError(SqlSugarException exception);
 }

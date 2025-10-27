@@ -1,9 +1,4 @@
 ﻿using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Renova.Core.Components.SqlSugar;
 
@@ -13,4 +8,9 @@ namespace Renova.Core.Components.SqlSugar;
 public class SqlSugarOptions : ConnectionConfig
 {
     public static readonly string SectionName = "SqlSugarOptions:ConnectionStrings";
+
+    /// <summary>
+    /// 启用控制台打印SQL
+    /// </summary>
+    public bool EnableConsoleSql { get; set; } = false;
 }
