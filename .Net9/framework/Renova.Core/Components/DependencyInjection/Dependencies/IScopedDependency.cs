@@ -1,4 +1,4 @@
-﻿namespace Renova.Core.Components.DependencyInjection.Dependencies;
+﻿namespace Renova.Core;
 
 /// <summary>
 /// 作用域服务注册依赖

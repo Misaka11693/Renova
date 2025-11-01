@@ -4,6 +4,9 @@ using Serilog.Events;
 
 namespace Renova.Core.Components.Serilog;
 
+/// <summary>
+/// Serilog 配置
+/// </summary>
 public static class SerilogConfigurator
 {
     /// <summary>
@@ -16,7 +19,7 @@ public static class SerilogConfigurator
             .MinimumLevel.Verbose()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .MinimumLevel.Override("System", LogEventLevel.Warning)
-            .MinimumLevel.Override("Hangfire", LogEventLevel.Debug)
+            .MinimumLevel.Override("Hangfire", LogEventLevel.Warning)
             .Enrich.FromLogContext()
             .WriteTo.Logger(ConfigureAllLog)       // 所有级别日志
             .WriteTo.Logger(ConfigureVerboseLog)   // 详细级别

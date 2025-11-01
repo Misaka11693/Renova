@@ -1,4 +1,4 @@
-﻿namespace Renova.Core.Components.DependencyInjection.Dependencies;
+﻿namespace Renova.Core;
 
 /// <summary>
 /// 瞬时服务注册依赖

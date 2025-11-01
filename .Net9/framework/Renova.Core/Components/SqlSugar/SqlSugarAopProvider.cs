@@ -1,5 +1,4 @@
 ﻿using Renova.Core.Apps;
-using Renova.Core.Components.DependencyInjection.Dependencies;
 using Serilog;
 using SqlSugar;
 using System.Reflection;

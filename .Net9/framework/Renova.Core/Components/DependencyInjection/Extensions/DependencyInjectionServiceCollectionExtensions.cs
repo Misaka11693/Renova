@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using Renova.Core.Apps;
+using Renova.Core.Components.DependencyInjection.Attributes;
 //using Serilog;
 using System.Diagnostics;
-using Renova.Core.Components.DependencyInjection.Attributes;
-using Renova.Core.Components.DependencyInjection.Dependencies;
+using System.Reflection;
 
-namespace Renova.Core.Components.DependencyInjection.Extensions;
+namespace Renova.Core.Components;
 
 /// <summary>
 /// 依赖注入拓展类
@@ -87,7 +86,7 @@ public static class DependencyInjectionServiceCollectionExtensions
                       !i.IsAssignableFrom(typeof(IScopedDependency)) &&
                       !i.IsAssignableFrom(typeof(ISingletonDependency)) &&
                        i.Name.StartsWith("I")
-                      //&& (i.Name.EndsWith("Service") || i.Name.EndsWith("Provider") || i.Name.EndsWith("Dependency") || i.Name.EndsWith(type.Name))
+                        //&& (i.Name.EndsWith("Service") || i.Name.EndsWith("Provider") || i.Name.EndsWith("Dependency") || i.Name.EndsWith(type.Name))
                         )
                         .ToList();
 

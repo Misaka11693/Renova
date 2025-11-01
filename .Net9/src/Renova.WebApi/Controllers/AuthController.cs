@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Renova.Core.Components.Job;
 using Renova.Core.Components.Security.Authentication.Abstractions;
 using Renova.Core.Components.Security.Authentication.Const;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Renova.WebApi.Controllers;
 
@@ -31,7 +33,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [AllowAnonymous]
     //[SkipWrap]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         if (request.Username != "admin" || request.Password != "c4ca4238a0b923820dcc509a6f75849b")
         {

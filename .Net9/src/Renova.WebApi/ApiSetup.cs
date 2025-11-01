@@ -2,10 +2,12 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Renova.Core.Apps.Extensions;
+using Renova.Core.Components;
 using Renova.Core.Components.Cache;
 using Renova.Core.Components.Cors;
 using Renova.Core.Components.EventBus;
 using Renova.Core.Components.FileStorage;
+using Renova.Core.Components.Job;
 using Renova.Core.Components.Localization;
 using Renova.Core.Components.Response;
 using Renova.Core.Components.Security.Extensions;
@@ -29,6 +31,9 @@ public static class ApiSetup
 
         // 配置应用,优先级最高
         builder.ConfigureApplication();
+
+        // 配置依赖注入
+        builder.Services.AddDependencyInjection();
 
         // Add services to the container.
         builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -86,6 +91,12 @@ public static class ApiSetup
         // 配置安全认证服务
         builder.Services.AddSecuritySetup();
 
+        // 配置缓存服务
+        builder.Services.AddCache();
+
+        // 配置定时任务
+        builder.Services.AddHangfireJob();
+
         // Ngix 代理时，获取客户端真实 IP
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {
@@ -128,6 +139,9 @@ public static class ApiSetup
         app.UseForwardedHeaders();
 
         app.UseApplication();
+
+        // hangfire定时任务
+        app.UseHangfireJobMiddleware();
 
         // 本地化中间件
         app.UseRequestLocalizationMiddewar();
