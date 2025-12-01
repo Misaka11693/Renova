@@ -10,6 +10,9 @@ public sealed class SqlSugarUnitOfWork : IUnitOfWork
 {
     private readonly ISqlSugarClient _sqlSugarClient;
 
+    /// <summary>
+    /// 构造函数
+    /// </summary>
     public SqlSugarUnitOfWork(ISqlSugarClient sqlSugarClient)
     {
         _sqlSugarClient = sqlSugarClient;

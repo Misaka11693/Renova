@@ -22,7 +22,7 @@ public static class JobSetup
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
             .UseStorage());
-
+    
         services.AddHangfireServer(options =>
         {
             options.ServerName = Environment.MachineName;

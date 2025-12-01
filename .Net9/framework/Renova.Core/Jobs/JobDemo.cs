@@ -23,14 +23,14 @@ public class JobDemo : JobBase
     /// 任务执行
     /// </summary>
 
-    public override Task ExecuteAsync(JobParameters? parameters)
+    public override async Task<Task> ExecuteAsync(JobParameters? parameters)
     {
         //测试缓存自动续租
-        //for (int i = 0; i < 9999; i++)
-        //{
-        //    Console.WriteLine("你好");
-        //    await Task.Delay(1_000);
-        //}
+        for (int i = 0; i < 9999; i++)
+        {
+            Console.WriteLine("你好");
+            await Task.Delay(1000);
+        }
 
         //控制台输出App.HttpContext 是否为空,用于校验Hangfire作业中HttpContext是否可用
         var httpContext = App.HttpContext;

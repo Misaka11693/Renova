@@ -158,7 +158,7 @@ public class FtpFileStorageProvider : IFileStorageProvider
 
     /// <summary>
     /// 获取文件的公网访问 URL
-    /// </summary
+    /// </summary>
     public string GetFileUrl(string filePath)
     {
         return $"{_options.PublicUrl.TrimEnd('/')}/{filePath.TrimStart('/')}";
