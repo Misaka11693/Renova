@@ -11,6 +11,7 @@ using Renova.Core.Components.Job;
 using Renova.Core.Components.Localization;
 using Renova.Core.Components.Response;
 using Renova.Core.Components.Security.Extensions;
+using Renova.Core.Components.SqlSugar;
 using Renova.Core.Components.Swagger;
 using Simple.DynamicWebApi;
 
@@ -93,6 +94,8 @@ public static class ApiSetup
 
         // 配置缓存服务
         builder.Services.AddCache();
+
+        builder.Services.AddSqlSugar();
 
         // 配置定时任务
         builder.Services.AddHangfireJob();

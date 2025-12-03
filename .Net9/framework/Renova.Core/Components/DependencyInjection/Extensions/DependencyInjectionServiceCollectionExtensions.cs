@@ -31,9 +31,10 @@ public static class DependencyInjectionServiceCollectionExtensions
                 !t.IsAbstract &&
                 !t.IsInterface &&
                 (
-                    typeof(ITransientDependency).IsAssignableFrom(t) ||
-                    typeof(IScopedDependency).IsAssignableFrom(t) ||
-                    typeof(ISingletonDependency).IsAssignableFrom(t) ||
+                    // 判断类型是否实现生命周期标记接口
+                    t.IsAssignableTo(typeof(ITransientDependency)) ||
+                    t.IsAssignableTo(typeof(IScopedDependency)) ||
+                    t.IsAssignableTo(typeof(ISingletonDependency)) ||
                     t.GetCustomAttribute<DependencyAttribute>() != null
                 ));
 
@@ -46,15 +47,15 @@ public static class DependencyInjectionServiceCollectionExtensions
             {
                 lifetime = attribute.Lifetime;
             }
-            else if (typeof(ITransientDependency).IsAssignableFrom(type))
+            else if (type.IsAssignableTo(typeof(ITransientDependency)))
             {
                 lifetime = ServiceLifetime.Transient;
             }
-            else if (typeof(IScopedDependency).IsAssignableFrom(type))
+            else if (type.IsAssignableTo(typeof(IScopedDependency)))
             {
                 lifetime = ServiceLifetime.Scoped;
             }
-            else if (typeof(ISingletonDependency).IsAssignableFrom(type))
+            else if (type.IsAssignableTo(typeof(ISingletonDependency)))
             {
                 lifetime = ServiceLifetime.Singleton;
             }
@@ -64,16 +65,17 @@ public static class DependencyInjectionServiceCollectionExtensions
                     $"类型 {type.FullName} 未通过 [Dependency] 特性或 I*Dependency 接口指定有效的生命周期。");
             }
 
+            // 筛选有效的服务接口（排除系统接口和生命周期标记接口）
             var serviceTypes = type.GetInterfaces()
                 .Where(i =>
-                    // 排除系统/生命周期标记接口
-                    !typeof(IDisposable).IsAssignableFrom(i) &&
-                    !typeof(IAsyncDisposable).IsAssignableFrom(i) &&
-                    !typeof(ITransientDependency).IsAssignableFrom(i) &&
-                    !typeof(IScopedDependency).IsAssignableFrom(i) &&
-                    !typeof(ISingletonDependency).IsAssignableFrom(i) &&
+                    // 排除系统或基础设施接口
+                    !i.IsAssignableTo(typeof(IDisposable)) &&
+                    !i.IsAssignableTo(typeof(IAsyncDisposable)) &&
+                    !i.IsAssignableTo(typeof(ITransientDependency)) &&
+                    !i.IsAssignableTo(typeof(IScopedDependency)) &&
+                    !i.IsAssignableTo(typeof(ISingletonDependency)) &&
 
-                    // 必须是标准业务接口命名
+                    // 仅保留符合业务命名规范的接口
                     i.Name.StartsWith("I") &&
                     (
                         i.Name.EndsWith("Service") ||
@@ -85,12 +87,12 @@ public static class DependencyInjectionServiceCollectionExtensions
 
             if (serviceTypes.Count == 0)
             {
-                // 无匹配接口，注册自身
+                // 无匹配接口，注册自身类型
                 services.Add(new ServiceDescriptor(type, type, lifetime));
             }
             else
             {
-                // 注册所有匹配的服务接口
+                // 为每个匹配的接口注册服务
                 foreach (var serviceType in serviceTypes)
                 {
                     services.Add(new ServiceDescriptor(serviceType, type, lifetime));

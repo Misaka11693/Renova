@@ -4,7 +4,7 @@ using Renova.Core.Components.Cache.Lock;
 namespace Renova.Core;
 
 /// <summary>
-/// 分布式锁扩展方法
+/// ICache扩展方法,实现锁的续租功能（支持内存缓存和分布式缓存）
 /// </summary>
 public static class DistributedLockExtensions
 {
