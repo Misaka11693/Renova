@@ -61,11 +61,11 @@ public class ApiResponseProvider : IApiResponseProvider
         switch (statusCode)
         {
             case StatusCodes.Status401Unauthorized:
-                response = RestfulResult(statusCode: statusCode, errors: "登录已过期，请重新登录");
+                response = RestfulResult(statusCode: statusCode, errors: "401 Unauthorized");
                 break;
 
             case StatusCodes.Status403Forbidden:
-                response = RestfulResult(statusCode: statusCode, errors: "禁止访问，没有权限", data: context.Request.Path);
+                response = RestfulResult(statusCode: statusCode, errors: "403 Forbidden", data: context.Request.Path);
                 break;
 
             default:
