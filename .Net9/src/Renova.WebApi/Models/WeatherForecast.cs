@@ -1,4 +1,4 @@
-namespace Renova
+namespace Renova.WebApi.Models
 {
     /// <summary>
     /// 天气预报模型

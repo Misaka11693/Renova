@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Renova.Core.Components.Job;
@@ -31,6 +32,7 @@ public class SysJobService : IDynamicWebApi, ITransientDependency
     /// <summary>
     /// 添加或更新定时任务
     /// </summary>
+    [HttpPost("jobs")]
     [DisplayName("添加或更新定时任务")]
     public void AddOrUpdateJob(JobConfig jobConfig)
     {

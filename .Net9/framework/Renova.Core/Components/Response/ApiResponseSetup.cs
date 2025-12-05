@@ -28,6 +28,9 @@ public static class ApiResponseSetup
         Action<MvcOptions>? configure = default)
         where TFilter : class, IFilterMetadata
     {
+        // 注册响应提供器
+        services.TryAddSingleton<IApiResponseProvider, ApiResponseProvider>();
+
         // 注册过滤器
         services.TryAddScoped<TFilter>();
 

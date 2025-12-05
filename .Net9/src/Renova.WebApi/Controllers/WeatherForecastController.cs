@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Renova.WebApi.Models;
 
 namespace Renova.Controllers
 {

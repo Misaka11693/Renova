@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Renova.Core;
 using Renova.Core.Components.Job;
 using Renova.Core.Components.Security.Authentication.Abstractions;
 using Renova.Core.Components.Security.Authentication.Const;
@@ -37,7 +38,8 @@ public class AuthController : ControllerBase
     {
         if (request.Username != "admin" || request.Password != "c4ca4238a0b923820dcc509a6f75849b")
         {
-            return Unauthorized("用户名或密码错误");
+            //return Unauthorized("用户名或密码错误");
+            throw new UserFriendlyException("用户名或密码错误");
         }
 
         // 用户声明
