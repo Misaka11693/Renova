@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.WebApi", "src\Renova.WebApi\Renova.WebApi.csproj", "{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.WebApi", "Renova.WebApi\Renova.WebApi.csproj", "{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "framework\Renova.Core\Renova.Core.csproj", "{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "Renova.Core\Renova.Core.csproj", "{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
