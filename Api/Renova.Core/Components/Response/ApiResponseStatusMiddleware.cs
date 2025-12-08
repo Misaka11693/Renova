@@ -12,6 +12,9 @@ public class ApiResponseStatusMiddleware
     private readonly IApiResponseProvider _responseProvider;
 
 
+    /// <summary>
+    /// 构造函数
+    /// </summary>
     public ApiResponseStatusMiddleware(RequestDelegate next, IApiResponseProvider provider)
     {
         _next = next;
@@ -19,6 +22,9 @@ public class ApiResponseStatusMiddleware
 
     }
 
+    /// <summary>
+    /// 中间件执行入口
+    /// </summary>
     public async Task InvokeAsync(HttpContext context)
     {
         await _next(context);

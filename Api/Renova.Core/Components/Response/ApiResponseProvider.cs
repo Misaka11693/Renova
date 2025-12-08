@@ -68,6 +68,10 @@ public class ApiResponseProvider : IApiResponseProvider
                 response = RestfulResult(statusCode: statusCode, errors: "403 Forbidden", data: context.Request.Path);
                 break;
 
+            case StatusCodes.Status404NotFound:
+                response = RestfulResult(statusCode: statusCode, errors: "你来到了未知的荒原", data: context.Request.Path);
+                break;
+
             default:
                 return; // 不处理的状态码直接跳过
         }
