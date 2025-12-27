@@ -14,6 +14,7 @@ public static class JobMiddleware
     public static IApplicationBuilder UseHangfireJobMiddleware(this IApplicationBuilder app)
     {
         app.UseHangfireDashboard("/hangfire");
+
         return app;
     }
 }

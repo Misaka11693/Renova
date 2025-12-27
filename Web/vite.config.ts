@@ -9,6 +9,7 @@ import { CodeInspectorPlugin } from 'code-inspector-plugin';
 import fs from 'fs';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { webUpdateNotice } from '@plugin-web-update-notification/vite';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import vitePluginsAutoI18n, { EmptyTranslator, YoudaoTranslator } from 'vite-auto-i18n-plugin';
 const pathResolve = (dir: string) => {
 	return resolve(__dirname, '.', dir);

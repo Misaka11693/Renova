@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Renova.Core;
 using Renova.WebApi.Models;
+using System.ComponentModel;
 
 namespace Renova.Controllers
 {
     /// <summary>
-    /// ÌìÆøÔ¤±¨¿ØÖÆÆ÷
+    /// å¤©æ°”é¢„æŠ¥æ§åˆ¶å™¨
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    [ApiExplorerSettings(GroupName = "ÌìÆøÔ¤±¨")]
+    [ApiExplorerSettings(GroupName = "å¤©æ°”é¢„æŠ¥")]
+    [LoggingMonitorAttribute]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -20,7 +23,7 @@ namespace Renova.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
 
         /// <summary>
-        /// ¹¹Ôìº¯Êı
+        /// æ„é€ å‡½æ•°
         /// </summary>
         /// <param name="logger"></param>
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
@@ -29,15 +32,16 @@ namespace Renova.Controllers
         }
 
         /// <summary>
-        /// »ñÈ¡ÌìÆøÔ¤±¨ĞÅÏ¢
+        /// è·å–å¤©æ°”é¢„æŠ¥ä¿¡æ¯
         /// </summary>
         /// <returns></returns>
-        //[AllowAnonymous]
-        [Authorize(Policy = "WeatherForecast:Get")]
+        [AllowAnonymous]
+        //[Authorize(Policy = "WeatherForecast:Get")]
         [HttpGet(Name = "GetWeatherForecast")]
+        [DisplayName("è·å–å¤©æ°”é¢„æŠ¥ä¿¡æ¯")]
         public IEnumerable<WeatherForecast> Get()
         {
-            //throw new Exception("²âÊÔÈ«¾ÖÒì³£´¦Àí");
+            throw new Exception("æµ‹è¯•å…¨å±€å¼‚å¸¸å¤„ç†");
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

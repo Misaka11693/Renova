@@ -28,7 +28,9 @@ public static class SerilogConfigurator
             .WriteTo.Logger(ConfigureWarnLog)      // 警告级别
             .WriteTo.Logger(ConfigureErrorLog)     // 错误级别
             .WriteTo.Logger(ConfigureFatalLog)     // 致命级别
+#if DEBUG
             .WriteTo.Console()
+#endif
             .CreateLogger();
     }
 

@@ -18,12 +18,12 @@ try
 
     {description}
 
-    """, "Version: 1.0", "ÉúÃüÈçÍ¬Ò»³¡ÂÃ³Ì£¬Ã¿Ò»²½¶¼ÖµµÃÕäÏ§£»ÎŞÂÛ·çÓê»¹ÊÇÇç¿Õ£¬Î´À´×Ü»áÒòÄãµÄÅ¬Á¦¶ø¸ü¼ÓÃÀºÃ");
+    """, "Version: 1.0", "ç”Ÿå‘½å¦‚åŒä¸€åœºæ—…ç¨‹ï¼Œæ¯ä¸€æ­¥éƒ½å€¼å¾—çæƒœï¼›æ— è®ºé£é›¨è¿˜æ˜¯æ™´ç©ºï¼Œæœªæ¥æ€»ä¼šå› ä½ çš„åŠªåŠ›è€Œæ›´åŠ ç¾å¥½");
 
-    Log.Information($"Renova.Admin £¬Run! ");
+    Log.Information($"Renova.Admin ï¼ŒRun! ");
     var builder = WebApplication.CreateBuilder(args);
-    Log.Information($"µ±Ç°Ö÷»úÆô¶¯»·¾³-¡¾{builder.Environment.EnvironmentName}¡¿");
-    Log.Information($"µ±Ç°Ö÷»úÆô¶¯µØÖ·-¡¾{builder.Configuration["App:SelfUrl"]}¡¿");
+    Log.Information($"å½“å‰ä¸»æœºå¯åŠ¨ç¯å¢ƒ-ã€{builder.Environment.EnvironmentName}ã€‘");
+    Log.Information($"å½“å‰ä¸»æœºå¯åŠ¨åœ°å€-ã€{builder.Configuration["App:SelfUrl"]}ã€‘");
     builder.WebHost.UseUrls(builder.Configuration["App:SelfUrl"]!);
     builder.Host.UseSerilog();
     builder.Host.UseAutofac();
@@ -34,7 +34,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Renova.Admin Æô¶¯Ê§°Ü");
+    Log.Fatal(ex, "Renova.Admin å¯åŠ¨å¤±è´¥");
 }
 finally
 {
