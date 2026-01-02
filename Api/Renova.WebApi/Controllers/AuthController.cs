@@ -48,6 +48,7 @@ public class AuthController : ControllerBase
                 new Claim(ClaimTypes.NameIdentifier, "1"), // 用户ID
                 new Claim(ClaimTypes.Name, request.Username),
                 new Claim(ClaimTypes.Role, "Admin"),
+                new Claim("ua", this.HttpContext.Request.Headers.UserAgent.ToString()),
                 //new Claim("Permission", "WeatherForecast:Get")//按钮权限 todo：改为 数据库 + redis缓存
             };
 
@@ -80,13 +81,17 @@ public class AuthController : ControllerBase
         var claims = new List<Claim>
         {
              new Claim(ClaimTypes.NameIdentifier, userId),
+             new Claim("ua", this.HttpContext.Request.Headers.UserAgent.ToString()),
         };
 
-        var newAccessToken = _jwtTokenService.GenerateAccessToken(claims);
+        // 生成 AccessToken 和 RefreshToken
+        var accessToken = _jwtTokenService.GenerateAccessToken(claims);
+        var refreshToken = _jwtTokenService.GenerateRefreshToken(claims);
 
         return Ok(new
         {
-            AccessToken = newAccessToken
+            access_token = accessToken,
+            RefreshToken = refreshToken
         });
     }
 

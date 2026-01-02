@@ -76,7 +76,7 @@ public class JwtTokenService : IJwtTokenService
             // JWT 唯一标识
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             //令牌类型（AccessToken / RefreshToken）
-            new Claim("token_type", tokenType)
+            new Claim(AuthSchemes.TokenType, tokenType),
         };
 
         return claimList;
