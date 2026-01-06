@@ -49,21 +49,17 @@ public static class JwtAuthenticationExtensions
 
             options.Events = new JwtBearerEvents
             {
-                // 验证 token_type 是否为 access
-                OnMessageReceived = context =>
-                {
-                    var tokenType = context.Request.Headers[AuthSchemes.TokenType].ToString();
-                    if (!string.Equals(tokenType, AuthSchemes.AccessToken, StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Fail("Invalid token_type for access token scheme.");
-                        return Task.CompletedTask;
-                    }
-                    return Task.CompletedTask;
-                },
-
-                // 验证 User-Agent 是否匹配，防止令牌被盗用
                 OnTokenValidated = context =>
                 {
+                    // 1. 验证 token_type 类型
+                    var tokenType = context.Principal?.FindFirst(AuthSchemes.TokenType)?.Value;
+                    if (!string.Equals(tokenType, AuthSchemes.AccessToken, StringComparison.OrdinalIgnoreCase))
+                    {
+                        context.Fail("Invalid token_type claim for access token scheme.");
+                        return Task.CompletedTask;
+                    }
+
+                    // 2. 验证 User-Agent 是否匹配，防止令牌被盗用
                     var tokenUa = context.Principal?.FindFirst("ua")?.Value;
                     var requestUa = context.HttpContext.Request.Headers.UserAgent.ToString();
 
@@ -106,20 +102,22 @@ public static class JwtAuthenticationExtensions
                         return Task.CompletedTask;
                     }
 
-                    var refreshToken = context.Request.Headers["refresh_token"].FirstOrDefault();
-                    if (string.IsNullOrEmpty(refreshToken))
-                    {
-                        context.Fail("Missing refresh_token header.");
-                        return Task.CompletedTask;
-                    }
-
-                    context.Token = refreshToken;
                     return Task.CompletedTask;
                 },
 
                 // 验证 User-Agent 是否匹配，防止令牌被盗用
                 OnTokenValidated = context =>
                 {
+
+                    // 1. 验证 token_type 类型
+                    var tokenType = context.Principal?.FindFirst("token_type")?.Value;
+                    if (!string.Equals(tokenType, AuthSchemes.RefreshToken, StringComparison.OrdinalIgnoreCase))
+                    {
+                        context.Fail("Invalid token_type claim for refresh token scheme.");
+                        return Task.CompletedTask;
+                    }
+
+                    // 2. 验证 User-Agent 是否匹配，防止令牌被盗用
                     var tokenUa = context.Principal?.FindFirst("ua")?.Value;
                     var requestUa = context.HttpContext.Request.Headers.UserAgent.ToString();
 
