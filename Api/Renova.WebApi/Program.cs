@@ -1,7 +1,3 @@
-using Renova;
-using Renova.Core.Components.Autofac;
-using Renova.Core.Components.Serilog;
-using Serilog;
 
 
 try
