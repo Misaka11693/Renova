@@ -1,21 +1,4 @@
-﻿using Microsoft.AspNetCore.HttpOverrides;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Renova.Core.Apps.Extensions;
-using Renova.Core.Components;
-using Renova.Core.Components.Cache;
-using Renova.Core.Components.Cors;
-using Renova.Core.Components.EventBus;
-using Renova.Core.Components.FileStorage;
-using Renova.Core.Components.Job;
-using Renova.Core.Components.Localization;
-using Renova.Core.Components.Response;
-using Renova.Core.Components.Security.Extensions;
-using Renova.Core.Components.SqlSugar;
-using Renova.Core.Components.Swagger;
-using Simple.DynamicWebApi;
-
-namespace Renova;
+﻿namespace Renova;
 
 /// <summary>
 /// API 配置扩展
@@ -23,8 +6,10 @@ namespace Renova;
 public static class ApiSetup
 {
     /// <summary>
-    /// 配置服务
+    /// 配置服务容器
     /// </summary>
+    /// <param name="builder">Web 应用构建器</param>
+    /// <returns>配置后的 Web 应用构建器</returns>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
         // 配置应用服务,优先级最高
@@ -34,17 +19,24 @@ public static class ApiSetup
         builder.Services.AddDependencyInjection();
 
         // 配置控制器及 NewtonsoftJson 设置
-        builder.Services.AddControllers().AddNewtonsoftJson(options =>
-        {
-            // 首字母小写（驼峰样式）
-            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            // 时间格式化
-            options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-            // 忽略循环引用
-            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-        });
+        builder.Services
+            .AddControllers(options =>
+            {
+                options.Filters.Add<LoggingMonitorAttribute>();//日志监控
+            })
+            .AddNewtonsoftJson(options =>
+            {
+                // 首字母小写（驼峰命名）
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+                // 时间格式化
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+
+                // 忽略循环引用
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
+        // OpenAPI 文档支持（.NET 内置） Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         // 注册 API 统一响应格式过滤器
@@ -98,8 +90,10 @@ public static class ApiSetup
     }
 
     /// <summary>
-    /// 配置 HTTP 请求管道
+    /// 配置 HTTP 请求管道中间件
     /// </summary>
+    /// <param name="app">Web 应用</param>
+    /// <returns>配置后的 Web 应用</returns>
     public static WebApplication UseMiddlewares(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
@@ -114,7 +108,7 @@ public static class ApiSetup
             app.UseDeveloperExceptionPage();
         }
 
-        // 全局异常处理中间件
+        // 全局异常处理
         app.UseGlobalExceptionHandling();
 
         // 统一 API 响应状态码处理中间件
@@ -126,19 +120,19 @@ public static class ApiSetup
         // 配置应用中间件
         app.UseApplication();
 
-        // Hangfire 定时任务中间件
+        // Hangfire 仪表盘
         app.UseHangfireJobMiddleware();
 
-        // 本地化中间件
+        // 本地化
         app.UseRequestLocalizationMiddewar();
 
-        // 浏览器输入 wwwroot 目录下的文件可以直接访问
+        // 静态文件 浏览器输入 wwwroot 目录下的文件可以直接访问
         app.UseStaticFiles();
 
         // 重定向到 HTTPS
         app.UseHttpsRedirection();
 
-        // 认证
+        // 认证（必须在授权前）
         app.UseAuthentication();
 
         // 授权
