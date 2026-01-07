@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NewLife.Http;
 using Renova.Core.Common.Extensions;
-using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
@@ -68,107 +70,129 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IOr
         // http 上下文
         var httpContext = context.HttpContext;
 
-        // 控制器名称
-        var controllerName = actionMethod.DeclaringType?.Name ?? "UnknownController";
+        // 终结点显示名称
+        var endpointDisplayName = httpContext.GetEndpoint()?.DisplayName;
 
-        // 操作名称
+        // 控制器与方法信息
+        var controllerName = actionMethod.DeclaringType?.Name;
         var actionName = actionMethod.Name;
+        var displayName = actionMethod.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
 
-        // 显示名称
-        var displayName = actionMethod.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? string.Empty;
-
-        // http 请求方式
+        // HTTP 信息
         var httpRequestMethod = httpContext.Request.Method;
-
-        // http 请求 url
-        // $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.Path}{httpContext.Request.QueryString}";
         var httpRequestUrl = httpContext.Request.GetDisplayUrl();
-
-        // http 协议
         var httpProtocol = httpContext.Request.Protocol;
-
-        // http 来源地址
         var httpReferer = httpContext.Request.Headers["Referer"].ToString();
 
-        // http 请求端源（swagger还是其他）
-        var httpUserAgent = httpContext.Request.Headers["request-from"].ToString() ?? "client";
-
-        // 浏览器标识
+        // 客户端来源
+        var httpRequestFrom = httpContext.Request.Headers["request-from"].ToString();
+        httpRequestFrom = string.IsNullOrWhiteSpace(httpRequestFrom) ? "client" : httpRequestFrom;
         var httpBrowserAgent = httpContext.Request.Headers["User-Agent"].ToString();
-
-        // 客户端区域语言
         var httpAcceptLanguage = httpContext.Request.Headers["Accept-Language"].ToString();
 
-        // 客户端 IP 地址
+        // 网络连接信息
         var httpClientIp = GetClientIpAddress(httpContext.Connection.RemoteIpAddress);
-
-        // 客户端源端口
         var httpClientPort = httpContext.Connection.RemotePort;
-
-        // 服务端 IP 地址
         var httpServerIp = GetClientIpAddress(httpContext.Connection.LocalIpAddress);
-
-        // 服务端源端口
         var httpServerPort = httpContext.Connection.LocalPort;
-
-        // 客户端连接 ID
         var httpConnectionId = httpContext.Connection.Id;
 
-        // 服务线程 ID
+        // 线程与系统信息
+        var machineName = System.Environment.MachineName;
         var httpThreadId = Environment.CurrentManagedThreadId;
-
-        // 系统名称
         var osDescription = RuntimeInformation.OSDescription;
-
-        // 系统架构
         var osArchitecture = RuntimeInformation.OSArchitecture.ToString();
-
-        // .NET 架构
         var frameworkArchitecture = RuntimeInformation.FrameworkDescription;
 
-        // Web 启动地址（监听地址，非客户端访问地址）
+        // 服务启动信息
         var processStartUrl = httpContext.RequestServices.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()?.Addresses;
-
-        // 运行环境
         var environmentName = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().EnvironmentName;
-
-        // 启动程序集（在 Web 托管环境下 GetEntryAssembly() 可能为 null）
         var entryAssembly = Assembly.GetEntryAssembly()?.GetName().Name ?? httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().ApplicationName;
-
-        // 托管程序
         var hostingProcess = GetHostingProcessType(entryAssembly);
 
+        // 授权信息
+        bool isAuthenticated = httpContext!.User!.Identity!.IsAuthenticated == true;
+        string authenticationStatus = isAuthenticated ? "已认证" : "未认证";
+        var accessToken = NormalizeLogValue(httpContext.Request.Headers["Authorization"].ToString());
+        var refreshToken = NormalizeLogValue(httpContext.Request.Headers["refresh_token"].ToString());
+        string userName = isAuthenticated ? (httpContext.User.FindFirst(ClaimConst.UserId)?.Value ?? "未知用户") : "匿名用户";
+
+
+        // 记录开始时间 & 启动计时器
+        var startTime = DateTime.UtcNow;
+        var stopwatch = Stopwatch.StartNew();
+
+        // 执行 Action
         var result = await next();
 
-        var logItems = new[]
+        // 停止计时
+        stopwatch.Stop();
+        var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+
+        // 获取异常信息
+        var exception = result.Exception;
+        bool hasException = exception != null;
+        string exceptionStatus = hasException ? "已发生" : "无异常";
+        string exceptionType = NormalizeLogValue(hasException ? exception!.GetType().FullName : null);
+        string exceptionMessage = NormalizeLogValue(hasException ? exception!.Message : null);
+        string exceptionSource = NormalizeLogValue(hasException ? exception!.Source : null);
+        string exceptionStackTrace = NormalizeLogValue(hasException ? exception!.StackTrace : null);
+
+
+        var logItems = new string[]
         {
-            $"##控制器名称## {controllerName}",
+            "",
+            $"{endpointDisplayName}",
+            "",
+            "━━━━━━━━━━━━━━━  路由信息 ━━━━━━━━━━━━━━━",
             $"##控制器名称## {controllerName}",
             $"##操作方法## {actionName}",
             $"##显示名称## {displayName}",
             "",
+            "━━━━━━━━━━━━━━━  HTTP 请求 ━━━━━━━━━━━━━━━",
             $"##请求方式## {httpRequestMethod}",
             $"##请求地址## {httpRequestUrl}",
             $"##HTTP 协议## {httpProtocol}",
             $"##来源页面## {httpReferer}",
             "",
+            "━━━━━━━━━━━━━━━  连接信息 ━━━━━━━━━━━━━━━",
             $"##客户端地址## {httpClientIp}:{httpClientPort}",
             $"##服务端地址## {httpServerIp}:{httpServerPort}",
             $"##连接标识## {httpConnectionId}",
             "",
-            $"##请求来源## {httpUserAgent}",
+            "━━━━━━━━━━━━━━━  客户端上下文 ━━━━━━━━━━━━━━━",
+            $"##请求来源## {httpRequestFrom}",
             $"##浏览器标识## {httpBrowserAgent}",
             $"##接受语言## {httpAcceptLanguage}",
             "",
+            "━━━━━━━━━━━━━━━  服务端环境 ━━━━━━━━━━━━━━━",
             $"##托管程序## {hostingProcess}",
             $"##运行环境## {environmentName}",
             $"##入口程序集## {entryAssembly}",
             $"##监听地址## {string.Join("，", processStartUrl ?? ["N/A"])}",
             "",
+            "━━━━━━━━━━━━━━━  执行与系统 ━━━━━━━━━━━━━━━",
+            $"##开始时间## {startTime:yyyy-MM-dd HH:mm:ss.fff}",
+            $"##执行耗时## {elapsedMilliseconds} ms",
+            $"##线程标识## {httpThreadId}",
+            $"##服务器名称## {machineName}",
             $"##操作系统## {osDescription}",
             $"##系统架构## {osArchitecture}",
             $"##.NET 版本## {frameworkArchitecture}",
-            $"##线程标识## {httpThreadId}"
+            "",
+            $"━━━━━━━━━━━━━━━  授权信息 ━━━━━━━━━━━━━━━",
+            $"##身份认证## {authenticationStatus}",
+            $"##用户标识## {userName}",
+            $"##访问令牌## {accessToken}",
+            $"##刷新令牌## {refreshToken}",
+            "",
+            $"━━━━━━━━━━━━━━━  异常信息 ━━━━━━━━━━━━━━━",
+            $"##异常状态## {exceptionStatus}",
+            $"##异常类型## {exceptionType}",
+            $"##异常消息## {exceptionMessage}",
+            $"##异常来源## {exceptionSource}",
+            $"##异常堆栈## {exceptionStackTrace}",
+            "",
         };
 
         var logContent = BuildAlignedLog(Title, logItems);
@@ -271,7 +295,7 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IOr
             }
         }
 
-        sb.AppendLine($"┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ {title} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        sb.AppendLine($"┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         return sb.ToString();
     }
 
@@ -297,6 +321,14 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IOr
         var currentWidth = GetDisplayWidth(text);
         var spaces = Math.Max(0, totalWidth - currentWidth);
         return text + new string(' ', spaces);
+    }
+
+    /// <summary>
+    /// 规范化日志字段值：空值统一输出 "-"
+    /// </summary>
+    private static string NormalizeLogValue(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? "-" : value;
     }
 }
 
