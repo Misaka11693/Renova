@@ -8,6 +8,7 @@ global using Renova.Core.Apps.Extensions;
 global using Renova.Core.Components;
 global using Renova.Core.Components.Autofac;
 global using Renova.Core.Components.Cache;
+global using Renova.Core.Components.Configuration;
 global using Renova.Core.Components.Cors;
 global using Renova.Core.Components.EventBus;
 global using Renova.Core.Components.FileStorage;

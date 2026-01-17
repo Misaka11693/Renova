@@ -1,10 +1,12 @@
 
 
+
+
 try
 {
-    Log.Logger = SerilogConfigurator.Init();
+    Log.Logger = SerilogConfigurator.CreateBootstrapLogger();
 
-    Log.Information("""
+    Log.Information("""                      
 
      ____                                  _       _           _       
     |  _ \ ___ _ __   _____   ____ _      / \   __| |_ __ ___ |_|_ __  
@@ -17,11 +19,11 @@ try
     """, "Version: 1.0", "生命如同一场旅程，每一步都值得珍惜；无论风雨还是晴空，未来总会因你的努力而更加美好");
 
     Log.Information($"Renova.Admin ，Run! ");
-    var builder = WebApplication.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args).AddDynamicJsonFiles();
     Log.Information($"当前主机启动环境-【{builder.Environment.EnvironmentName}】");
     Log.Information($"当前主机启动地址-【{builder.Configuration["App:SelfUrl"]}】");
     builder.WebHost.UseUrls(builder.Configuration["App:SelfUrl"]!);
-    builder.Host.UseSerilog();
+    builder.Host.UseConfiguredSerilog();
     builder.Host.UseAutofac();
     builder.AddServices();
     var app = builder.Build();
