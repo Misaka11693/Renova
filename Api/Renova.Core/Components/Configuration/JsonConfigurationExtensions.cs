@@ -29,10 +29,14 @@ public static class JsonConfigurationExtensions
             }, "JsonConfigOptions.Include 中的文件模式必须全部以 .json 结尾")
             .ValidateOnStart();
 
+        //// 获取配置选项
+        //var options = new JsonConfigOptions(); // 此时已有默认值
+        //builder.Configuration.GetSection(JsonConfigOptions.SectionName).Bind(options);
+
         // 获取配置选项
         var options = builder.Configuration.GetSection(JsonConfigOptions.SectionName).Get<JsonConfigOptions>();
 
-        if (options == null || !options.Enabled)
+        if (options == null || !options.Enabled || string.IsNullOrEmpty(options.Folder))
             return builder;
 
         var env = builder.Environment.EnvironmentName;

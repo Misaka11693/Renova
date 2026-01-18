@@ -16,13 +16,12 @@ public class JsonConfigOptions : IConfigSectionProvider
     /// <summary>
     /// 是否启用动态 JSON 加载
     /// </summary>
-    public bool Enabled { get; set; } = true;
+    public bool Enabled { get; set; } = false;
 
     /// <summary>
-    /// 需要加载的目录名
+    /// 需要加载的目录名(为空代表无需加载)
     /// </summary>
-    [Required]
-    public string Folder { get; set; } = "Config";
+    public string? Folder { get; set; }
 
     /// <summary>
     /// 包含的文件模式
