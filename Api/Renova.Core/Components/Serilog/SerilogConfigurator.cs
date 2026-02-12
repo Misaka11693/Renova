@@ -1,7 +1,12 @@
-﻿using Serilog;
+﻿using Elastic.Transport;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Renova.Core.Components.Serilog.Options;
+using Renova.Core.Components.Serilog.Sinks.Elasticsearch;
+using Renova.Core.Components.Serilog.Sinks.File;
+using Serilog;
 using Serilog.Core;
 using Serilog.Events;
-
 namespace Renova.Core.Components.Serilog;
 
 /// <summary>
@@ -10,121 +15,68 @@ namespace Renova.Core.Components.Serilog;
 public static class SerilogConfigurator
 {
     /// <summary>
-    /// 初始化全局日志配置
+    /// 初始化 Serilog 启动日志
     /// </summary>
-    /// <returns>配置完成的 Logger 实例</returns>
-    public static Logger Init()
+    public static Logger CreateBootstrapLogger()
     {
         return new LoggerConfiguration()
-            .MinimumLevel.Verbose()
+            .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .MinimumLevel.Override("System", LogEventLevel.Warning)
             .MinimumLevel.Override("Hangfire", LogEventLevel.Warning)
             .Enrich.FromLogContext()
-            .WriteTo.Logger(ConfigureAllLog)       // 所有级别日志
-            .WriteTo.Logger(ConfigureVerboseLog)   // 详细级别
-            .WriteTo.Logger(ConfigureDebugLog)     // 调试级别
-            .WriteTo.Logger(ConfigureInfoLog)      // 信息级别
-            .WriteTo.Logger(ConfigureWarnLog)      // 警告级别
-            .WriteTo.Logger(ConfigureErrorLog)     // 错误级别
-            .WriteTo.Logger(ConfigureFatalLog)     // 致命级别
+            .WriteTo.Logger(ConfigureBootstrapFileLog)
 #if DEBUG
             .WriteTo.Console()
 #endif
             .CreateLogger();
     }
 
-    #region 私有配置方法
+    /// <summary>
+    /// 配置 HostBuilder 使用 Serilog
+    /// </summary>
+    public static IHostBuilder UseConfiguredSerilog(this IHostBuilder hostBuilder)
+    {
+        return hostBuilder.UseSerilog((context, services, logger) =>
+        {
+            // 会在 var app = builder.Build() 时触发此配置
+
+            var options = context.Configuration.GetSection("SerilogOptions").Get<SerilogOptions>() ?? new SerilogOptions();
+
+            logger
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Override("Hangfire", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", context.HostingEnvironment.ApplicationName)
+                .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName);
+
+            // 配置文件日志
+            FileLogConfigurator.Configure(logger, options, services);
+
+            // 配置 Elasticsearch 日志
+            ElasticsearchLogConfigurator.Configure(logger, options, services);
+#if DEBUG
+            logger.WriteTo.Console();
+#endif
+
+        });
+    }
+
+    #region 配置日志
 
     /// <summary>
-    /// 配置所有级别日志
+    /// 配置启动时日志
     /// </summary>
-    private static void ConfigureAllLog(LoggerConfiguration config)
+    private static void ConfigureBootstrapFileLog(LoggerConfiguration config)
     {
         config
             .WriteTo.Async(a => a.File(
-            path: "logs/all/all-.log",
-            rollingInterval: RollingInterval.Day,
-            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+            path: "logs/bootstrap/bootstrap-.log",
+            rollingInterval: RollingInterval.Day
+            //outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
         ));
-    }
-
-    /// <summary>
-    /// 配置详细级别日志 (最低级别)
-    /// </summary>
-    private static void ConfigureVerboseLog(LoggerConfiguration config)
-    {
-        config
-           .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Verbose)
-           .WriteTo.Async(a => a.File(
-               path: "logs/verbose/verbose-.log",
-               rollingInterval: RollingInterval.Day
-           ));
-    }
-
-    /// <summary>
-    /// 配置调试级别日志
-    /// </summary>
-    private static void ConfigureDebugLog(LoggerConfiguration config)
-    {
-        config
-           .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug)
-           .WriteTo.Async(a => a.File(
-               path: "logs/debug/debug-.log",
-               rollingInterval: RollingInterval.Day
-           ));
-    }
-
-    /// <summary>
-    /// 配置信息级别日志
-    /// </summary>
-    private static void ConfigureInfoLog(LoggerConfiguration config)
-    {
-        config
-           .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
-           .WriteTo.Async(a => a.File(
-               path: "logs/info/info-.log",
-               rollingInterval: RollingInterval.Day
-           ));
-    }
-
-    /// <summary>
-    /// 配置警告级别日志
-    /// </summary>
-    private static void ConfigureWarnLog(LoggerConfiguration config)
-    {
-        config
-           .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Warning)
-           .WriteTo.Async(a => a.File(
-               path: "logs/warn/warn-.log",
-               rollingInterval: RollingInterval.Day
-           ));
-    }
-
-    /// <summary>
-    /// 配置错误级别日志
-    /// </summary>
-    private static void ConfigureErrorLog(LoggerConfiguration config)
-    {
-        config
-           .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
-           .WriteTo.Async(a => a.File(
-               path: "logs/error/error-.log",
-               rollingInterval: RollingInterval.Day
-           ));
-    }
-
-    /// <summary>
-    /// 配置致命级别日志 (最高级别)
-    /// </summary>
-    private static void ConfigureFatalLog(LoggerConfiguration config)
-    {
-        config
-           .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal)
-           .WriteTo.Async(a => a.File(
-               path: "logs/fatal/fatal-.log",
-               rollingInterval: RollingInterval.Day
-           ));
     }
 
     #endregion

@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<!-- Web API 相关 -->
+		<PackageReference Include="Elastic.Serilog.Sinks" Version="9.0.0" />
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
 		<PackageReference Include="Hangfire.Core" Version="1.8.21" />
 		<PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
@@ -32,7 +33,7 @@
 		<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
 
 		<!-- 事件总线 -->
-		<PackageReference Include="Jaina" Version="4.4.0" />
+		<PackageReference Include="Jaina" Version="4.5.0" />
 
 		<!-- 缓存 -->
 		<PackageReference Include="NewLife.Redis" Version="6.3.2025.1001" />

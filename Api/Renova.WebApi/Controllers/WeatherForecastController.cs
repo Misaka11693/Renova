@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Renova.Core;
 using Renova.WebApi.Models;
+using Serilog.Context;
 using System.ComponentModel;
 
 namespace Renova.Controllers
@@ -12,7 +13,6 @@ namespace Renova.Controllers
     [ApiController]
     [Route("[controller]")]
     [ApiExplorerSettings(GroupName = "天气预报")]
-    [LoggingMonitorAttribute]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -38,11 +38,16 @@ namespace Renova.Controllers
         [AllowAnonymous]
         //[Authorize(Policy = "WeatherForecast:Get")]
         [HttpGet(Name = "GetWeatherForecast")]
-        [DisplayName("获取天气预报信息")]
-        public IEnumerable<WeatherForecast> Get()
+        [DisplayName("访问接口")]
+        public IEnumerable<WeatherForecast> GetData()
         {
-            throw new Exception("测试全局异常处理");
-
+            using (LogContext.PushProperty("UserId", 123))
+            using (LogContext.PushProperty("OrderId", "ORD-20260118"))
+            {
+                Log.Information("创建订单");
+            }
+            //throw new UserFriendlyException("测试全局异常处理");
+            Log.Error("访问接口日志 {Time}", DateTime.Now);
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

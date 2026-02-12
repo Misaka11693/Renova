@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
 using Renova.Core.Apps;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Renova.Core.Components.Swagger;
 
+/// <summary>
+/// 
+/// </summary>
 public static class SwaggerMiddleware
 {
     /// <summary>
@@ -25,8 +29,8 @@ public static class SwaggerMiddleware
             }
 
             // 2. 动态加载其他分组（排除预注册分组）
-            var provider = App.GetRequiredService<IApiDescriptionGroupCollectionProvider>();
-
+            //var provider = App.GetRequiredService<IApiDescriptionGroupCollectionProvider>(App.RootServices);//如果根服务提供器还未设置，会触发构建新的服务对象，不推荐在启动期间使用
+            var provider = app.ApplicationServices.GetRequiredService<IApiDescriptionGroupCollectionProvider>();
             provider.ApiDescriptionGroups.Items
                 .Where(g =>
                     !string.IsNullOrEmpty(g.GroupName) &&

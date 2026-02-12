@@ -1,7 +1,5 @@
 
 
-
-
 try
 {
     Log.Logger = SerilogConfigurator.CreateBootstrapLogger();
