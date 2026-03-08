@@ -40,31 +40,17 @@ public class SysJobService : IDynamicWebApi, ITransientDependency
 
         var jobType = GetJobType(jobConfig.JobClass);
 
+        //_recurringJobs.AddOrUpdate(
+        //    recurringJobId: jobConfig.RecurringJobId,
+        //    methodCall: () => ((JobBase)ActivatorUtilities.CreateInstance(_serviceProvider, jobType)).RunAsync(jobConfig),
+        //    cronExpression: jobConfig.CronExpression,
+        //    options: new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
+
         _recurringJobs.AddOrUpdate(
             recurringJobId: jobConfig.RecurringJobId,
-            methodCall: () => ((JobBase)ActivatorUtilities.CreateInstance(_serviceProvider, jobType)).RunAsync(jobConfig),
+            methodCall: () => CreateJob(jobType).RunAsync(jobConfig),
             cronExpression: jobConfig.CronExpression,
             options: new RecurringJobOptions { TimeZone = TimeZoneInfo.Local });
-    }
-
-    /// <summary>
-    /// 获取作业类型
-    /// </summary>
-    [DisplayName("获取作业类型")]
-    private Type GetJobType(string jobClassName)
-    {
-        var type = Type.GetType(jobClassName, throwOnError: false, ignoreCase: false);
-        if (type == null)
-        {
-            throw new InvalidOperationException($"无法找到作业类型 '{jobClassName}'。请确保类型名称包含完整命名空间和程序集");
-        }
-
-        if (!typeof(JobBase).IsAssignableFrom(type))
-        {
-            throw new InvalidOperationException($"作业类型 '{jobClassName}' 必须继承自 JobBase 基类");
-        }
-
-        return type;
     }
 
     /// <summary>
@@ -88,7 +74,7 @@ public class SysJobService : IDynamicWebApi, ITransientDependency
             CronExpression = ""
         };
 
-        var jobInstance = (JobBase)ActivatorUtilities.CreateInstance(_serviceProvider, jobType);
+        var jobInstance = CreateJob(jobType);
 
         await jobInstance.RunAsync(jobConfig);
     }
@@ -96,9 +82,49 @@ public class SysJobService : IDynamicWebApi, ITransientDependency
     /// <summary>
     /// 触发定时任务立即执行
     /// </summary>
-    /// <param name="recurringJobId"></param>
     public void TriggerJob(string recurringJobId)
     {
         _recurringJobs.Trigger(recurringJobId);
+    }
+
+    /// <summary>
+    /// 移除定时任务
+    /// </summary>
+    /// <param name="jobId"></param>
+    [HttpDelete("jobs/{jobId}")]
+    public void RemoveJob(string jobId)
+    {
+        RecurringJob.RemoveIfExists(jobId);
+    }
+
+    /// <summary>
+    /// 获取作业类型
+    /// </summary>
+    [NonAction]
+    [DisplayName("获取作业类型")]
+    private Type GetJobType(string jobClassName)
+    {
+        var type = Type.GetType(jobClassName, throwOnError: false, ignoreCase: false);
+        if (type == null)
+        {
+            throw new InvalidOperationException($"无法找到作业类型 '{jobClassName}'。请确保类型名称包含完整命名空间和程序集");
+        }
+
+        if (!typeof(JobBase).IsAssignableFrom(type))
+        {
+            throw new InvalidOperationException($"作业类型 '{jobClassName}' 必须继承自 JobBase 基类");
+        }
+
+        return type;
+    }
+
+    /// <summary>
+    /// 创建作业
+    /// </summary>
+    [NonAction]
+    [DisplayName("创建作业")]
+    private JobBase CreateJob(Type jobType)
+    {
+        return (JobBase)ActivatorUtilities.CreateInstance(_serviceProvider, jobType);
     }
 }

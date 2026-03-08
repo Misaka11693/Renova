@@ -3,6 +3,7 @@ using Elastic.Serilog.Sinks;
 using Elastic.Transport;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Renova.Core.Components.Serilog.Abstractions;
 using Renova.Core.Components.Serilog.Options;
 using Renova.Core.Components.Serilog.Sinks.Elasticsearch.Ecs;
 using Renova.Core.Components.Serilog.Sinks.Elasticsearch.Policies;
@@ -28,7 +29,7 @@ public static class ElasticsearchLogConfigurator
             throw new InvalidOperationException("EnableElk=true 时必须配置 ElasticsearchUrl");
         }
 
-        var policy = services.GetRequiredService<ElasticsearchLogWritePolicy>();
+        var policy = services.GetRequiredService<IElasticsearchLogWritePolicy>();
 
         var httpAccessor = services.GetService<HttpContextAccessor>();
 
