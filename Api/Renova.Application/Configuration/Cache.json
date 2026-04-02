@@ -1,0 +1,15 @@
+{
+  // 缓存配置
+  "CacheOptions": {
+    "CacheType": "Memory", //Memory or Redis
+    "Redis": {
+      "Server": "localhost:6379",
+      "Db": 3,
+      "JobDb": 2,
+      "Password": "",
+      "UserName": "",
+      "Timeout": 3000,
+      "Prefix": ""
+    }
+  }
+}

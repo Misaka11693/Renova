@@ -7,7 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Configuration\Cache.json" />
+    <None Remove="Configuration\Jwt.json" />
+    <None Remove="Configuration\Localization.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Configuration\Cache.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\Localization.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Configuration\Jwt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

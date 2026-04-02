@@ -20,4 +20,6 @@
     <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
 </Project>
