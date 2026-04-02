@@ -1,4 +1,7 @@
-﻿namespace Renova;
+﻿
+using Renova.Core.Components.Modular;
+
+namespace Renova;
 
 /// <summary>
 /// API 配置扩展
@@ -17,6 +20,9 @@ public static class ApiSetup
 
         // 按契约注入服务
         builder.Services.AddDependencyInjection();
+
+        // 添加模块化
+        builder.Services.AddApplicationModules();
 
         // 配置控制器及 NewtonsoftJson 设置
         builder.Services
@@ -73,7 +79,7 @@ public static class ApiSetup
         builder.Services.AddCache();
 
         // 注册 SqlSugar 服务
-        //builder.Services.AddSqlSugar();
+        builder.Services.AddSqlSugar();
 
         // 注册 Hangfire 定时任务服务
         builder.Services.AddHangfireJob();
@@ -119,6 +125,9 @@ public static class ApiSetup
 
         // 配置应用中间件
         app.UseApplication();
+
+        // 配置模块化中间件
+        app.UseApplicationModules();
 
         // Hangfire 仪表盘
         app.UseHangfireJobMiddleware();

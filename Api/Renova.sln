@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36301.6
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11620.152 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.WebApi", "Renova.WebApi\Renova.WebApi.csproj", "{0A8BF544-02FB-89DD-FA0C-AB2F26E34BD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Core", "Renova.Core\Renova.Core.csproj", "{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Application", "Renova.Application\Renova.Application.csproj", "{A5D5C791-7746-4C76-89D7-A60559DB8014}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33397922-3DEF-12B6-CD87-85BC2AD4D2FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D5C791-7746-4C76-89D7-A60559DB8014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D5C791-7746-4C76-89D7-A60559DB8014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5D5C791-7746-4C76-89D7-A60559DB8014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5D5C791-7746-4C76-89D7-A60559DB8014}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

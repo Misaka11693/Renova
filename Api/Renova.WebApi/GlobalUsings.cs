@@ -17,6 +17,7 @@ global using Renova.Core.Components.Localization;
 global using Renova.Core.Components.Response;
 global using Renova.Core.Components.Security.Extensions;
 global using Renova.Core.Components.Serilog;
+global using Renova.Core.Components.SqlSugar;
 global using Renova.Core.Components.Swagger;
 global using Serilog;
 global using Simple.DynamicWebApi;

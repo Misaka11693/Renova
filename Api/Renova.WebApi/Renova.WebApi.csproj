@@ -12,11 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\Renova.Application\Renova.Application.csproj" />
+    <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
   </ItemGroup>
 
 </Project>

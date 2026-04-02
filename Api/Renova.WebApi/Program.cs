@@ -22,6 +22,7 @@ try
     Log.Information($"当前主机启动地址-【{builder.Configuration["App:SelfUrl"]}】");
     builder.WebHost.UseUrls(builder.Configuration["App:SelfUrl"]!);
     builder.Host.UseConfiguredSerilog();
+    //builder.Host.UseSerilog();
     builder.Host.UseAutofac();
     builder.AddServices();
     var app = builder.Build();
