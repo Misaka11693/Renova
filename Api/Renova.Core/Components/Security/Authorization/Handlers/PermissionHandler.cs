@@ -1,13 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
+using Renova.Core.Components.Security.Authorization.Attributes;
 using Renova.Core.Components.Security.Authorization.Requirements;
 
 namespace Renova.Core.Components.Security.Authorization.Handlers;
 
 /// <summary>
-/// 策略授权处理器
+/// 权限授权处理器
+/// 职责：
+/// 1. 自动解析当前接口所需权限
+/// 2. 从用户 Claims 中读取权限
+/// 3. 判断是否具备访问权限
 /// </summary>
 public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
 {
@@ -18,9 +24,6 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     /// <summary>
     /// 构造函数
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="accessor"></param>
-    /// <param name="webHostEnvironment"></param>
     public PermissionHandler(
         ILogger<PermissionHandler> logger,
         IHttpContextAccessor httpContextAccessor,
@@ -58,19 +61,52 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
             return Task.CompletedTask;
         }
 
-        // 从用户的 Claims 中获取权限
-        var permissions = context.User.FindAll("Permission").Select(c => c.Value);
+        var endpoint = httpContext.GetEndpoint();
+        if (endpoint == null)
+            return Task.CompletedTask;
 
-        // 如果用户拥有该权限，则授权成功
-        if (permissions.Contains(requirement.Permission))
+        var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+        if (actionDescriptor == null)
+            return Task.CompletedTask;
+
+        string permission;
+
+        // 3. 优先使用手动声明的权限
+        var permissionAttr = endpoint.Metadata.GetMetadata<PermissionAttribute>();
+        if (permissionAttr != null)
+        {
+            permission = permissionAttr.Code;
+        }
+        else
+        {
+            // 4. 自动推导权限（Controller + Action）
+            var controller = actionDescriptor.ControllerName.ToLowerInvariant();
+            var actionName = actionDescriptor.ActionName;
+
+            // 去掉 Async 后缀
+            if (!string.IsNullOrEmpty(actionName) &&
+                actionName.EndsWith("Async", StringComparison.OrdinalIgnoreCase))
+            {
+                actionName = actionName.Substring(0, actionName.Length - 5);
+            }
+
+            var action = actionName.ToLowerInvariant();
+
+            permission = $"{controller}:{action}";
+        }
+
+        //  5. 获取用户权限
+        var userPermissions = context.User.Claims
+            .Where(c => c.Type == "Permission")
+            .Select(c => c.Value);
+
+        //  6. 权限匹配
+        if (userPermissions.Contains(permission))
         {
             context.Succeed(requirement);
         }
 
-        // TODO: 通过数据库 + 缓存实现鉴权
-        // 1. 从缓存（如 Redis）中读取用户权限列表
-        // 2. 如果缓存不存在，则从数据库加载用户权限，并写入缓存
-
         return Task.CompletedTask;
+
     }
 }

@@ -45,9 +45,6 @@ public static class ApiSetup
         // 注册动态 WebApi 服务
         builder.Services.AddDynamicWebApi();
 
-        // OpenAPI 文档支持（.NET 内置） Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        //builder.Services.AddOpenApi();
-
         // 注册 API 统一响应格式过滤器
         builder.Services.AddApiResponseFilter();
 
@@ -104,9 +101,6 @@ public static class ApiSetup
     {
         if (app.Environment.IsDevelopment())
         {
-            // 启用 OpenAPI 中间件
-            //app.MapOpenApi();
-
             // 启用 Swagger 中间件
             app.UseSwaggerMiddleware();
 

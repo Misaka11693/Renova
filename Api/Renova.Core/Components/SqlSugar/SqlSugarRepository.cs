@@ -1,7 +1,8 @@
-﻿using Renova.Core.Apps;
+using Renova.Core.Apps;
 using Renova.Core.Components.Const;
 using Renova.Core.Components.SqlSugar;
 using SqlSugar;
+using System.Linq.Expressions;
 
 namespace Renova.Core;
 
@@ -73,9 +74,6 @@ public class SqlSugarRepository<T> : SimpleClient<T>, ISqlSugarRepository<T> whe
         }
         else
         {
-            // 租户ID非数字（如GUID），可扩展支持，此处暂降级到主库或抛异常
-            // 根据业务需求决定：可改为 throw 或 fallback
-            //return iTenant.GetConnectionScope(SqlSugarConst.MainConfigId);
             throw new InvalidOperationException($"无法解析租户ID: {tenantIdClaim}，请确保租户ID为数字型。");
         }
     }
@@ -116,5 +114,21 @@ public class SqlSugarRepository<T> : SimpleClient<T>, ISqlSugarRepository<T> whe
                 $"租户数据库连接未配置，租户ID: {tenantId}。" +
                 "请确保在 iTenant 中已注册该租户连接，或实现动态加载逻辑。");
         }
+    }
+
+    /// <summary>
+    /// 逻辑删除指定条件的数据。
+    /// </summary>
+    public Task<int> SoftDeleteAsync(Expression<Func<T, bool>> expression)
+    {
+        if (!typeof(ISoftDeleteFilter).IsAssignableFrom(typeof(T)))
+        {
+            throw new InvalidOperationException($"{typeof(T).Name} 未实现 {nameof(ISoftDeleteFilter)}，无法执行逻辑删除。");
+        }
+
+        return Context.Updateable<T>()
+            .SetColumns(nameof(ISoftDeleteFilter.IsDeleted), true)
+            .Where(expression)
+            .ExecuteCommandAsync();
     }
 }

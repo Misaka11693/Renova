@@ -6,6 +6,7 @@ using Renova.Core.Components.Security.Authentication.Options;
 using Renova.Core.Components.Security.Authentication.Services;
 using Renova.Core.Components.Security.Authorization.Handlers;
 using Renova.Core.Components.Security.Authorization.Policies;
+using Renova.Core.Components.Security.Authorization.Requirements;
 
 namespace Renova.Core.Components.Security.Extensions;
 
@@ -29,7 +30,7 @@ public static class SecurityServiceCollectionExtensions
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
         //  3.注册自定义授权策略提供器
-        services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+        //services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
 
         //  4.注册自定义权限处理器
         services.AddScoped<IAuthorizationHandler, PermissionHandler>();
@@ -37,12 +38,19 @@ public static class SecurityServiceCollectionExtensions
         // 5. 全局授权策略配置
         //    使用 AuthorizeFilter 会导致当方法上存在 [Authorize] 时触发两次鉴权
         //    因此改用 FallbackPolicy 来实现全局授权
+        //services.AddAuthorization(options =>
+        //{
+        //    // 默认策略：要求用户已通过认证
+        //    // 当控制器/方法没有显式标记 [Authorize] 或 [AllowAnonymous] 时，会应用此策略
+        //    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        //        .RequireAuthenticatedUser()
+        //        .Build();
+        //});
         services.AddAuthorization(options =>
         {
-            // 默认策略：要求用户已通过认证
-            // 当控制器/方法没有显式标记 [Authorize] 或 [AllowAnonymous] 时，会应用此策略
+            // 全局强制授权
             options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
+                .AddRequirements(new PermissionRequirement())
                 .Build();
         });
 

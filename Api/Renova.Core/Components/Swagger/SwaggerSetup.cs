@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
+
+
+//using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Renova.Core.Components.Swagger;
@@ -50,16 +54,32 @@ public static class SwaggerSetup
     /// </summary>
     private static void ConfigureJwtAuthentication(SwaggerGenOptions options)
     {
-        options.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             Name = "Authorization",
-            Description = "JWT授权(数据将在请求头中进行传输) 在下方输入{token} 即可，无需添加Bearer",
+            Description = "输入 Token（无需加 Bearer）",
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.Http,
-            Scheme = "bearer", //必须小写
+            Scheme = "bearer",
             BearerFormat = "JWT"
         });
 
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+
+        //var s = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" };
         //var scheme = new OpenApiSecurityScheme
         //{
         //    Reference = new OpenApiReference

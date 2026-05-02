@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Renova.Core\Renova.Core.csproj" />
+    <ProjectReference Include="..\Renova.Rbac\Renova.Rbac.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
