@@ -38,7 +38,7 @@ public static class SqlSugarSetup
             dbOptions.ConnectionConfigs.ForEach(config =>
             {
                 ISqlSugarClient db = sqlSugarClient.GetConnectionScope(config.ConfigId);
-                ConfigureDbAop(db, dbOptions.EnableConsoleSql);
+                ConfigureDbAop(db, config.EnableConsoleSql);
             });
         });
 

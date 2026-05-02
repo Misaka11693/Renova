@@ -13,6 +13,7 @@ public class AuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
 
     /// <summary>
     /// 根据策略名称动态获取授权策略
+    /// 如果走了自定义策略，就不会再去走默认的策略了，及不会再去执行JWT里的授权认证逻辑
     /// </summary>
     public override Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {

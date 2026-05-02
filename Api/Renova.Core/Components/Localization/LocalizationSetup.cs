@@ -30,7 +30,7 @@ public static class LocalizationSetup
         {
             services.AddLocalization(opt =>
             {
-                opt.ResourcesPath = options.ResourcesPath;
+                opt.ResourcesPath = options.ResourcesPath[0];
             });
             services.AddSingleton<ILocalizationService, ResourceLocalizerService>();
         }

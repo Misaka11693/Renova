@@ -31,6 +31,11 @@ public class DbConnectionOptions : IConfigSectionProvider
 public sealed class DbConnectionConfig : ConnectionConfig
 {
     /// <summary>
+    /// 启用控制台打印SQL
+    /// </summary>
+    public bool EnableConsoleSql { get; set; } = false;
+
+    /// <summary>
     /// 数据库配置
     /// </summary>
     public DbSettings DbSettings { get; set; } = new DbSettings();

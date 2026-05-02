@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Renova.Core.Components.SqlSugar;
+namespace Renova.Core;
 
 /// <summary>
 /// 软删除标记接口

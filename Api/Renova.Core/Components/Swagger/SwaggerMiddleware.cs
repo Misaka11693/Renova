@@ -31,6 +31,7 @@ public static class SwaggerMiddleware
             // 2. 动态加载其他分组（排除预注册分组）
             //var provider = App.GetRequiredService<IApiDescriptionGroupCollectionProvider>(App.RootServices);//如果根服务提供器还未设置，会触发构建新的服务对象，不推荐在启动期间使用
             var provider = app.ApplicationServices.GetRequiredService<IApiDescriptionGroupCollectionProvider>();
+            var s = provider.ApiDescriptionGroups;
             provider.ApiDescriptionGroups.Items
                 .Where(g =>
                     !string.IsNullOrEmpty(g.GroupName) &&

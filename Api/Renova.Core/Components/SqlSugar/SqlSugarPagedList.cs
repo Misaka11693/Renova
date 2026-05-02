@@ -53,7 +53,7 @@ public static class SqlSugarPagedExtensions
     /// <summary>
     /// 将 SqlSugar 查询投影并分页（同步）
     /// </summary>
-    public static SqlSugarPagedList<TResult> ToPagedList<TEntity, TResult>(
+    public static SqlSugarPagedList<TResult> ToSqlSugarPagedList<TEntity, TResult>(
         this ISugarQueryable<TEntity> query,
         int pageNumber,
         int pageSize,
@@ -71,7 +71,7 @@ public static class SqlSugarPagedExtensions
     /// <summary>
     /// 将 SqlSugar 查询直接分页（同步）
     /// </summary>
-    public static SqlSugarPagedList<TEntity> ToPagedList<TEntity>(
+    public static SqlSugarPagedList<TEntity> ToSqlSugarPagedList<TEntity>(
         this ISugarQueryable<TEntity> query,
         int pageNumber,
         int pageSize)
@@ -87,7 +87,7 @@ public static class SqlSugarPagedExtensions
     /// <summary>
     /// 将 SqlSugar 查询投影并分页（异步）
     /// </summary>
-    public static async Task<SqlSugarPagedList<TResult>> ToPagedListAsync<TEntity, TResult>(
+    public static async Task<SqlSugarPagedList<TResult>> ToSqlSugarPagedListAsync<TEntity, TResult>(
         this ISugarQueryable<TEntity> query,
         int pageNumber,
         int pageSize,
@@ -105,7 +105,7 @@ public static class SqlSugarPagedExtensions
     /// <summary>
     /// 将 SqlSugar 查询直接分页（异步）
     /// </summary>
-    public static async Task<SqlSugarPagedList<TEntity>> ToPagedListAsync<TEntity>(
+    public static async Task<SqlSugarPagedList<TEntity>> ToSqlSugarPagedListAsync<TEntity>(
         this ISugarQueryable<TEntity> query,
         int pageNumber,
         int pageSize)
@@ -121,7 +121,7 @@ public static class SqlSugarPagedExtensions
     /// <summary>
     /// 对内存集合进行分页（适用于小数据集，不推荐大数据量使用）
     /// </summary>
-    public static SqlSugarPagedList<TEntity> ToPagedList<TEntity>(
+    public static SqlSugarPagedList<TEntity> ToSqlSugarPagedList<TEntity>(
         this IEnumerable<TEntity> source,
         int pageNumber,
         int pageSize)

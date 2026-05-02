@@ -42,14 +42,14 @@ public static class ApiSetup
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
+        // 注册动态 WebApi 服务
+        builder.Services.AddDynamicWebApi();
+
         // OpenAPI 文档支持（.NET 内置） Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        //builder.Services.AddOpenApi();
 
         // 注册 API 统一响应格式过滤器
         builder.Services.AddApiResponseFilter();
-
-        // 注册动态 WebApi 服务
-        builder.Services.AddDynamicWebApi();
 
         // 注册 Swagger 文档服务（如果前端没有获取到最新swagger.json文件，可以通过清除浏览器的缓存来解决，快捷键为 Ctrl + Shift + R）
         builder.Services.AddSwaggerSetup();
@@ -88,7 +88,7 @@ public static class ApiSetup
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            options.KnownNetworks.Clear();
+            options.KnownIPNetworks.Clear();
             options.KnownProxies.Clear();
         });
 
@@ -105,7 +105,7 @@ public static class ApiSetup
         if (app.Environment.IsDevelopment())
         {
             // 启用 OpenAPI 中间件
-            app.MapOpenApi();
+            //app.MapOpenApi();
 
             // 启用 Swagger 中间件
             app.UseSwaggerMiddleware();

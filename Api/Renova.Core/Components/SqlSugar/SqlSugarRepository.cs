@@ -1,16 +1,15 @@
 ﻿using Renova.Core.Apps;
 using Renova.Core.Components.Const;
+using Renova.Core.Components.SqlSugar;
 using SqlSugar;
-using System.Collections.Concurrent;
 
-namespace Renova.Core.Components.SqlSugar;
+namespace Renova.Core;
 
 /// <summary>
 /// 基于 SqlSugar 的仓储实现，支持多租户。
 /// 注意：该仓储应注册为 Scoped 或 Transient，不可单例（因依赖当前用户上下文）。
 /// </summary>
-public class SqlSugarRepository<T> : SimpleClient<T>, ISqlSugarRepository<T>
-    where T : class, new()
+public class SqlSugarRepository<T> : SimpleClient<T>, ISqlSugarRepository<T> where T : class, new()
 {
     /// <summary>
     /// 当前租户上下文

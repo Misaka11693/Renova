@@ -6,7 +6,7 @@
     "DefaultCulture": "zh-CN", // 默认语言
     "SupportedCultures": [ "zh-CN", "en-US", "ja-JP" ], // 支持的语言
     "ResourceFileName": "lang", // 资源文件前缀名称
-    "ResourcesPath": "Resources", // 资源文件所在目录
+    "ResourcesPath": [ "Resources" ], // 资源文件所在目录
     "ResourceAssemblyName": "Renova.WebApi" // 资源文件所在程序集名称
   }
 }

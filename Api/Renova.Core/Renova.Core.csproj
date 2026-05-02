@@ -10,57 +10,57 @@
 	<ItemGroup>
 		<!-- Web API 相关 -->
 		<PackageReference Include="Elastic.Serilog.Sinks" Version="9.0.0" />
-		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
-		<PackageReference Include="Hangfire.Core" Version="1.8.21" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
+		<PackageReference Include="Hangfire.Core" Version="1.8.23" />
 		<PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
 		<PackageReference Include="Hangfire.Redis.StackExchange" Version="1.12.0" />
-		<PackageReference Include="Mapster" Version="7.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.9" />
+		<PackageReference Include="Mapster" Version="10.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.5" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Simple.DynamicWebApi" Version="1.0.5" />
 
 		<!-- 依赖注入与宿主 -->
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.5" />
 
 		<!-- 本地化 -->
-		<PackageReference Include="My.Extensions.Localization.Json" Version="3.4.0" />
+		<PackageReference Include="My.Extensions.Localization.Json" Version="4.0.0" />
 
 		<!-- 数据库：SqlSugar ORM-->
-		<PackageReference Include="SqlSugarCore" Version="5.1.4.205" />
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.214" />
 
 		<!-- RabbitMQ -->
-		<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+		<PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
 
 		<!-- 事件总线 -->
-		<PackageReference Include="Jaina" Version="4.5.0" />
+		<PackageReference Include="Jaina" Version="4.5.1" />
 
 		<!-- 缓存 -->
-		<PackageReference Include="NewLife.Redis" Version="6.3.2025.1001" />
+		<PackageReference Include="NewLife.Redis" Version="6.5.2026.403" />
 
 		<!-- IoC 容器 -->
-		<PackageReference Include="Autofac" Version="8.4.0" />
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
+		<PackageReference Include="Autofac" Version="9.1.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.0" />
 
 		<!-- 身份验证与授权 -->
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
 
 		<!-- Swagger -->
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.3" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
 
 		<!-- 文件存储 -->
-		<PackageReference Include="FluentFTP" Version="53.0.1" />
-		<PackageReference Include="SSH.NET" Version="2025.0.0" />
+		<PackageReference Include="FluentFTP" Version="54.1.0" />
+		<PackageReference Include="SSH.NET" Version="2025.1.0" />
 		<PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
 
 		<!-- 日志：Serilog -->
-		<PackageReference Include="Serilog" Version="4.3.0" />
-		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Serilog" Version="4.3.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
 		<PackageReference Include="Serilog.Expressions" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
 		<PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
 	</ItemGroup>
 

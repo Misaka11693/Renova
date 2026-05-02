@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace Renova.Core.Components.SqlSugar;
+namespace Renova.Core;
 
 /// <summary>
 /// 主键实体基类
@@ -79,19 +79,19 @@ public abstract class EntityBase : PrimaryKeyEntity, ISoftDeleteFilter
     /// 创建人Id
     /// </summary>
     [SugarColumn(ColumnDescription = "创建人Id", IsOnlyIgnoreUpdate = true, IsNullable = false)]
-    public required virtual long CreateUserId { get; set; }
+    public virtual long CreateUserId { get; set; }
 
     /// <summary>
     /// 创建人
     /// </summary>
     [SugarColumn(ColumnDescription = "创建人姓名", IsOnlyIgnoreUpdate = true, IsNullable = false)]
-    public required virtual string CreateUserName { get; set; }
+    public virtual string? CreateUserName { get; set; }
 
     /// <summary>
     /// 创建时间
     /// </summary>
     [SugarColumn(ColumnDescription = "创建时间", IsOnlyIgnoreUpdate = true, IsNullable = false)]
-    public required DateTime CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     /// <summary>
     /// 修改人Id

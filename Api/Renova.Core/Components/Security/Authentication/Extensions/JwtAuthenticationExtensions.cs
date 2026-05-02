@@ -49,27 +49,27 @@ public static class JwtAuthenticationExtensions
 
             options.Events = new JwtBearerEvents
             {
-                OnTokenValidated = context =>
-                {
-                    // 1. 验证 token_type 类型
-                    var tokenType = context.Principal?.FindFirst(AuthSchemes.TokenType)?.Value;
-                    if (!string.Equals(tokenType, AuthSchemes.AccessToken, StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Fail("Invalid token_type claim for access token scheme.");
-                        return Task.CompletedTask;
-                    }
+                //OnTokenValidated = context =>
+                //{
+                //    // 1. 验证 token_type 类型
+                //    var tokenType = context.Principal?.FindFirst(AuthSchemes.TokenType)?.Value;
+                //    if (!string.Equals(tokenType, AuthSchemes.AccessToken, StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        context.Fail("Invalid token_type claim for access token scheme.");
+                //        return Task.CompletedTask;
+                //    }
 
-                    // 2. 验证 User-Agent 是否匹配，防止令牌被盗用
-                    var tokenUa = context.Principal?.FindFirst("ua")?.Value;
-                    var requestUa = context.HttpContext.Request.Headers.UserAgent.ToString();
+                //    // 2. 验证 User-Agent 是否匹配，防止令牌被盗用
+                //    var tokenUa = context.Principal?.FindFirst("ua")?.Value;
+                //    var requestUa = context.HttpContext.Request.Headers.UserAgent.ToString();
 
-                    if (!string.Equals(tokenUa?.Trim(), requestUa?.Trim(), StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Fail("User-Agent mismatch");
-                    }
+                //    if (!string.Equals(tokenUa?.Trim(), requestUa?.Trim(), StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        context.Fail("User-Agent mismatch");
+                //    }
 
-                    return Task.CompletedTask;
-                }
+                //    return Task.CompletedTask;
+                //}
             };
         })
 
@@ -93,41 +93,41 @@ public static class JwtAuthenticationExtensions
             options.Events = new JwtBearerEvents
             {
                 // 验证 token_type 是否为 refresh，并从自定义请求头中提取 RefreshToken
-                OnMessageReceived = context =>
-                {
-                    var tokenType = context.Request.Headers[AuthSchemes.TokenType].ToString();
-                    if (!string.Equals(tokenType, AuthSchemes.RefreshToken, StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Fail("Invalid token_type for refresh token scheme.");
-                        return Task.CompletedTask;
-                    }
+                //OnMessageReceived = context =>
+                //{
+                //    var tokenType = context.Request.Headers[AuthSchemes.TokenType].ToString();
+                //    if (!string.Equals(tokenType, AuthSchemes.RefreshToken, StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        context.Fail("Invalid token_type for refresh token scheme.");
+                //        return Task.CompletedTask;
+                //    }
 
-                    return Task.CompletedTask;
-                },
+                //    return Task.CompletedTask;
+                //},
 
-                // 验证 User-Agent 是否匹配，防止令牌被盗用
-                OnTokenValidated = context =>
-                {
+                //// 验证 User-Agent 是否匹配，防止令牌被盗用
+                //OnTokenValidated = context =>
+                //{
 
-                    // 1. 验证 token_type 类型
-                    var tokenType = context.Principal?.FindFirst("token_type")?.Value;
-                    if (!string.Equals(tokenType, AuthSchemes.RefreshToken, StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Fail("Invalid token_type claim for refresh token scheme.");
-                        return Task.CompletedTask;
-                    }
+                //    // 1. 验证 token_type 类型
+                //    var tokenType = context.Principal?.FindFirst("token_type")?.Value;
+                //    if (!string.Equals(tokenType, AuthSchemes.RefreshToken, StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        context.Fail("Invalid token_type claim for refresh token scheme.");
+                //        return Task.CompletedTask;
+                //    }
 
-                    // 2. 验证 User-Agent 是否匹配，防止令牌被盗用
-                    var tokenUa = context.Principal?.FindFirst("ua")?.Value;
-                    var requestUa = context.HttpContext.Request.Headers.UserAgent.ToString();
+                //    // 2. 验证 User-Agent 是否匹配，防止令牌被盗用
+                //    var tokenUa = context.Principal?.FindFirst("ua")?.Value;
+                //    var requestUa = context.HttpContext.Request.Headers.UserAgent.ToString();
 
-                    if (!string.Equals(tokenUa?.Trim(), requestUa?.Trim(), StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Fail("User-Agent mismatch");
-                    }
+                //    if (!string.Equals(tokenUa?.Trim(), requestUa?.Trim(), StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        context.Fail("User-Agent mismatch");
+                //    }
 
-                    return Task.CompletedTask;
-                }
+                //    return Task.CompletedTask;
+                //}
             };
         });
 

@@ -32,7 +32,7 @@ public class LocalizationOptions : IConfigSectionProvider
     /// 资源文件所在的相对路径
     /// 相对于项目根目录，例如 "Resources"
     /// </summary>
-    public string ResourcesPath { get; set; } = "Resources";
+    public string[] ResourcesPath { get; set; } = ["Resources"];
 
     /// <summary>
     /// 资源文件的基础文件名（不包含语言后缀和扩展名）

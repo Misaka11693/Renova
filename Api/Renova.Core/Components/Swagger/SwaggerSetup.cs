@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Renova.Core.Components.Swagger;
@@ -60,19 +60,34 @@ public static class SwaggerSetup
             BearerFormat = "JWT"
         });
 
-        var scheme = new OpenApiSecurityScheme
-        {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "JwtBearer"
-            }
-        };
+        //var scheme = new OpenApiSecurityScheme
+        //{
+        //    Reference = new OpenApiReference
+        //    {
+        //        Type = ReferenceType.SecurityScheme,//注释： 
+        //        Id = "JwtBearer"
+        //    }
+        //};
 
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            [scheme] = Array.Empty<string>()
-        });
+        //options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        //{
+        //    [scheme] = Array.Empty<string>()
+        //});
+
+        //var securitySchema = new OpenApiSecurityScheme
+        //{
+        //    Name = "Authorization",
+        //    Type = SecuritySchemeType.Http,
+        //    Scheme = "Bearer",
+        //    BearerFormat = "JWT",
+        //    In = ParameterLocation.Header,
+        //    Description = "在下框中输入请求头中需要添加Jwt授权Token(无需添加Bearer)",
+        //};
+
+        //options.AddSecurityDefinition("JwtBearer", securitySchema);
+        //var securityRequirement = new OpenApiSecurityRequirement { { securitySchema, new[] { "Bearer" } } };
+        //options.AddSecurityRequirement(securityRequirement);
+
     }
 }
 

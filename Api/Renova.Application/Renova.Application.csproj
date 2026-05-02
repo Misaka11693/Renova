@@ -8,12 +8,16 @@
 
   <ItemGroup>
     <None Remove="Configuration\Cache.json" />
+    <None Remove="Configuration\Database.json" />
     <None Remove="Configuration\Jwt.json" />
     <None Remove="Configuration\Localization.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Configuration\Cache.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\Database.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Configuration\Localization.json">

@@ -1,7 +1,7 @@
 
 
-try
-{
+//try
+//{
     Log.Logger = SerilogConfigurator.CreateBootstrapLogger();
 
     Log.Information("""                      
@@ -28,12 +28,12 @@ try
     var app = builder.Build();
     app.UseMiddlewares();
     await app.RunAsync();
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Renova.Admin 启动失败");
-}
-finally
-{
-    Log.CloseAndFlush();
-}
+//}
+//catch (Exception ex)
+//{
+//    Log.Fatal(ex, "Renova.Admin 启动失败");
+//}
+//finally
+//{
+//    Log.CloseAndFlush();
+//}
