@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
@@ -9,104 +8,102 @@ using Renova.Core.Components.Security.Authorization.Requirements;
 namespace Renova.Core.Components.Security.Authorization.Handlers;
 
 /// <summary>
-/// 权限授权处理器
-/// 职责：
-/// 1. 自动解析当前接口所需权限
-/// 2. 从用户 Claims 中读取权限
-/// 3. 判断是否具备访问权限
+/// 权限授权处理器。
 /// </summary>
-public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
+public sealed class PermissionHandler : AuthorizationHandler<PermissionRequirement>
 {
+    private const string PermissionClaimType = "Permission";
+
     private readonly ILogger<PermissionHandler> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IWebHostEnvironment _webHostEnvironment;
 
     /// <summary>
-    /// 构造函数
+    /// 初始化 <see cref="PermissionHandler"/> 类的新实例。
     /// </summary>
+    /// <param name="logger">日志记录器。</param>
+    /// <param name="httpContextAccessor">HTTP 上下文访问器。</param>
     public PermissionHandler(
         ILogger<PermissionHandler> logger,
-        IHttpContextAccessor httpContextAccessor,
-        IWebHostEnvironment webHostEnvironment)
+        IHttpContextAccessor httpContextAccessor)
     {
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
-        _webHostEnvironment = webHostEnvironment;
     }
 
-
     /// <summary>
-    /// 授权处理逻辑
+    /// 处理权限授权要求。
     /// </summary>
+    /// <param name="context">授权上下文。</param>
+    /// <param name="requirement">权限要求。</param>
+    /// <returns>表示异步操作的任务。</returns>
     protected override Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
+        //不需要在此处手动处理 AllowAnonymous，因为在 ASP.NET Core 中，AllowAnonymous 特性会自动跳过授权处理器的执行。
 
-        var httpContext = _httpContextAccessor.HttpContext
-            ?? throw new InvalidOperationException("Missing HTTP context");
-
-        // 1. AllowAnonymous 检查
-        // 不需要在此处手动处理 AllowAnonymous，ASP.NET Core 的授权中间件会自动跳过带有该特性的端点。
-        //if (httpContext.GetEndpoint()?.Metadata?.GetMetadata<AllowAnonymousAttribute>() != null)
-        //{
-        //    context.Succeed(requirement); // 放行匿名访问
-        //    return Task.CompletedTask;
-        //}
-
-        // 2. 检查用户是否已登录（未认证用户直接拒绝访问）
-        if (httpContext.User.Identity is null || !httpContext.User.Identity.IsAuthenticated)
+        // 1. 用户是否已认证
+        if (context.User.Identity?.IsAuthenticated != true)
         {
             context.Fail();
             return Task.CompletedTask;
         }
 
-        var endpoint = httpContext.GetEndpoint();
-        if (endpoint == null)
+        // 2. 获取当前 HTTP Context
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext is null)
             return Task.CompletedTask;
 
-        var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
-        if (actionDescriptor == null)
+        // 3. 获取当前 Endpoint
+        var endpoint = httpContext.GetEndpoint();
+        if (endpoint is null)
             return Task.CompletedTask;
+
+        // 4. 获取 Controller / Action
+        var actionDescriptor =
+            endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+
+        if (actionDescriptor is null)
+            return Task.CompletedTask;
+
+        // 5. 获取权限码
+        var permissionAttribute =
+            endpoint.Metadata.GetMetadata<PermissionAttribute>();
 
         string permission;
 
-        // 3. 优先使用手动声明的权限
-        var permissionAttr = endpoint.Metadata.GetMetadata<PermissionAttribute>();
-        if (permissionAttr != null)
+        if (permissionAttribute is not null)
         {
-            permission = permissionAttr.Code;
+            // 显式声明的权限优先
+            permission = permissionAttribute.Code;
         }
         else
         {
-            // 4. 自动推导权限（Controller + Action）
-            var controller = actionDescriptor.ControllerName.ToLowerInvariant();
-            var actionName = actionDescriptor.ActionName;
+            // Controller + Action 自动生成权限
+            var controller = actionDescriptor.ControllerName;
+            var action = actionDescriptor.ActionName;
 
-            // 去掉 Async 后缀
-            if (!string.IsNullOrEmpty(actionName) &&
-                actionName.EndsWith("Async", StringComparison.OrdinalIgnoreCase))
+            if (action.EndsWith("Async", StringComparison.OrdinalIgnoreCase))
             {
-                actionName = actionName.Substring(0, actionName.Length - 5);
+                action = action[..^5];
             }
 
-            var action = actionName.ToLowerInvariant();
-
-            permission = $"{controller}:{action}";
+            permission = $"{controller}:{action}".ToLowerInvariant();
         }
 
-        //  5. 获取用户权限
-        var userPermissions = context.User.Claims
-            .Where(c => c.Type == "Permission")
-            .Select(c => c.Value);
+        // 6. 判断用户是否拥有权限
+        var hasPermission = context.User.Claims
+            .Where(x => x.Type == PermissionClaimType)
+            .Any(x => string.Equals(
+                x.Value,
+                permission,
+                StringComparison.OrdinalIgnoreCase));
 
-        //  6. 权限匹配
-        if (userPermissions.Contains(permission))
+        if (hasPermission)
         {
             context.Succeed(requirement);
         }
 
         return Task.CompletedTask;
-
     }
 }
