@@ -1,4 +1,5 @@
-﻿using Renova.Core.Apps;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Renova.Core.Apps;
 using Serilog;
 using SqlSugar;
 using System.Reflection;
@@ -186,6 +187,19 @@ public class SqlSugarAopProvider : ISqlSugarAopProvider, IScopedDependency
         }
 
         #endregion
+
+        //校验
+        if (entityInfo.OperationType == DataFilterType.InsertByObject || entityInfo.OperationType == DataFilterType.UpdateByObject)
+        {
+            var entity = entityInfo.EntityValue;
+            if (entity == null) return;
+            var validatorType = typeof(IEntityValidator<>).MakeGenericType(entity.GetType());
+            //var validator = _serviceProvider.GetService(validatorType);
+            var validator = App.GetService(validatorType);
+            if (validator == null) return;
+            var method = validatorType.GetMethod("Validate");
+            method?.Invoke(validator, new[] { entity, db });
+        }
     }
 
     /// <summary>

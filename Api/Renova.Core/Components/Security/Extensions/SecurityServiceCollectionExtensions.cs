@@ -48,7 +48,7 @@ public static class SecurityServiceCollectionExtensions
         //});
         services.AddAuthorization(options =>
         {
-            // 全局强制授权
+            // 全局强制授权--当控制器/方法没有显式标记 [Authorize] 或 [AllowAnonymous] 时，会应用此策略
             options.FallbackPolicy = new AuthorizationPolicyBuilder()
                 .AddRequirements(new PermissionRequirement())
                 .Build();

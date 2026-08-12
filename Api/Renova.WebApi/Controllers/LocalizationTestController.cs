@@ -6,6 +6,7 @@ namespace Renova.WebApi.Controllers
     /// <summary>
     /// 本地化测试控制器
     /// </summary>
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     [ApiExplorerSettings(GroupName = "本地化测试")]

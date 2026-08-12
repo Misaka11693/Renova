@@ -1,7 +1,5 @@
-
-
-//try
-//{
+try
+{
     Log.Logger = SerilogConfigurator.CreateBootstrapLogger();
 
     Log.Information("""                      
@@ -22,18 +20,18 @@
     Log.Information($"当前主机启动地址-【{builder.Configuration["App:SelfUrl"]}】");
     builder.WebHost.UseUrls(builder.Configuration["App:SelfUrl"]!);
     builder.Host.UseConfiguredSerilog();
-    //builder.Host.UseSerilog();
+    builder.Host.UseSerilog();
     builder.Host.UseAutofac();
     builder.AddServices();
     var app = builder.Build();
     app.UseMiddlewares();
     await app.RunAsync();
-//}
-//catch (Exception ex)
-//{
-//    Log.Fatal(ex, "Renova.Admin 启动失败");
-//}
-//finally
-//{
-//    Log.CloseAndFlush();
-//}
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Renova.Admin 启动失败");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
